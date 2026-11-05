@@ -846,3 +846,80 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------- the film pins and fills the screen while it plays ---------- */
+
+.reel-wrap {
+  --rp: 0;
+  position: relative;
+  height: 260svh;
+  padding: 0;
+  background: #050505;
+}
+.reel-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  padding: 70px var(--gutter) 46px;
+  overflow: hidden;
+}
+.reel-pin .reel-head {
+  width: 100%;
+  margin: 0;
+  opacity: calc(1 - min(1, var(--rp) * 6));
+}
+/* As big as the viewport allows at 16:9, after the player bar (about 64px). */
+.reel-pin .reel.rf {
+  width: min(100%, calc((100svh - 70px - 46px - 64px) * 16 / 9));
+  transform: scale(calc(0.86 + 0.14 * min(1, var(--rp) / 0.12)));
+  transform-origin: 50% 40%;
+  will-change: transform;
+}
+.reel-cue {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  bottom: 14px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.reel-wrap[data-cue="on"] .reel-cue {
+  opacity: 1;
+}
+.reel-cue span {
+  animation: hub-nudge 1.6s ease-in-out infinite;
+}
+@media (max-width: 720px) {
+  .reel-wrap {
+    height: 220svh;
+  }
+  .reel-pin {
+    padding: 64px 0 40px;
+  }
+  .reel-pin .reel-head {
+    padding: 0 var(--gutter);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reel-wrap {
+    height: auto;
+  }
+  .reel-pin {
+    position: relative;
+    height: auto;
+  }
+}

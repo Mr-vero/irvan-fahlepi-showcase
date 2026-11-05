@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useScrollProgress } from "@/lib/useScrollProgress";
 import Photo from "@/components/Photo";
 import type { PhotoKey } from "@/lib/photos";
 import { SITE } from "@/lib/site";
@@ -82,8 +83,17 @@ function timecode(t: number) {
 
 export default function Reel() {
   const root = useRef<HTMLDivElement>(null);
+  const section = useRef<HTMLElement>(null);
   const tl = useRef<gsap.core.Timeline | null>(null);
   const [paused, setPaused] = useState(false);
+
+  // The film pins for a screen and a half: it grows to fill the view as it arrives, holds while it plays,
+  // and the "keep scrolling" cue only appears once it has held for a moment.
+  useScrollProgress(section, (p) => {
+    const el = section.current!;
+    el.style.setProperty("--rp", p.toFixed(4));
+    el.dataset.cue = p > 0.35 ? "on" : "off";
+  });
 
   // Scale the fixed 1600 × 900 stage to the frame.
   useEffect(() => {
@@ -237,12 +247,23 @@ export default function Reel() {
     }, el);
 
     // Don't spend frames on a reel nobody is looking at.
-    io = new IntersectionObserver(([entry]) => {
-      const t = tl.current;
-      if (!t || t.paused() === !entry.isIntersecting) return;
-      if (!entry.isIntersecting) t.pause();
-      else if (!el.dataset.userPaused) t.play();
-    });
+    let seen = false;
+    io = new IntersectionObserver(
+      ([entry]) => {
+        const t = tl.current;
+        if (!t) return;
+        if (entry.isIntersecting && !seen) {
+          // First proper look: start from the title card, not wherever the loop happened to be.
+          seen = true;
+          if (!el.dataset.userPaused) t.restart();
+          return;
+        }
+        if (t.paused() === !entry.isIntersecting) return;
+        if (!entry.isIntersecting) t.pause();
+        else if (!el.dataset.userPaused) t.play();
+      },
+      { threshold: 0.6 },
+    );
     io.observe(el);
     });
 
@@ -273,7 +294,8 @@ export default function Reel() {
   const at = (p: readonly [number, number]) => ({ left: p[0], top: p[1] }) as React.CSSProperties;
 
   return (
-    <section className="reel-wrap" aria-labelledby="reel-title">
+    <section className="reel-wrap" ref={section} data-cue="off" aria-labelledby="reel-title">
+      <div className="reel-pin">
       <div className="reel-head">
         <h2 id="reel-title" className="hub-label">
           Showreel · How I work
@@ -557,6 +579,10 @@ export default function Reel() {
           </ol>
         </div>
         </div>
+      </div>
+      <p className="reel-cue" aria-hidden>
+        Keep scrolling to continue <span>↓</span>
+      </p>
       </div>
     </section>
   );
