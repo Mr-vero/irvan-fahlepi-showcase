@@ -6,8 +6,11 @@ test("the index links to every demo", async ({ page }) => {
   await chooseConsent(page, "Decline");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Games, quizzes");
 
+  const spotlight = page.locator(".spot");
+  await expect(spotlight.getByRole("heading", { level: 2 })).toHaveText("Shade Match");
+  await expect(spotlight.locator('a[href="/loreal-shade-match"]')).toBeAttached();
+
   for (const [title, path] of [
-    ["Shade Match", "/loreal-shade-match"],
     ["Maison Lumière", "/maison-lumiere"],
     ["Atelier Nº 7", "/atelier"],
     ["The Lab", "/lab"],
@@ -37,4 +40,14 @@ test("the reel's segments jump between scenes", async ({ page }) => {
   await page.locator(".reel").scrollIntoViewIfNeeded();
   await page.getByRole("button", { name: "Jump to Ask" }).click();
   await expect(page.locator('[data-scene="ask"]')).toBeVisible();
+});
+
+test("the live-work gallery links out to every shipped project", async ({ page }) => {
+  await page.goto("/");
+  await chooseConsent(page, "Decline");
+  const cards = page.locator("a.live-card");
+  await expect(cards).toHaveCount(9);
+  for (const href of ["https://getpingplay.com", "https://mr-vero.github.io/the-last-ember/", "https://jakjapanmatsuri.vercel.app"]) {
+    await expect(page.locator(`a.live-card[href="${href}"]`)).toHaveAttribute("target", "_blank");
+  }
 });

@@ -72,8 +72,9 @@ export default function Reel() {
         t.addLabel(id)
           .set(scenes[i], { autoAlpha: 1 })
           .fromTo(bg(id), { scale: 1.18 }, { scale: 1, duration: hold + 1.4, ease: "none" }, id)
-          .fromTo(q(`[data-scene="${id}"] .reel-wipe`), { scaleY: 1 }, { scaleY: 0, duration: 0.7, ease: "expo.inOut" }, id)
-          .from(word(id), { yPercent: 110, duration: 0.8, stagger: 0.04 }, `${id}+=0.35`)
+          // An iris opens on each scene, and the word snaps in out of a motion blur.
+          .fromTo(scenes[i], { clipPath: "circle(0% at 50% 55%)" }, { clipPath: "circle(80% at 50% 55%)", duration: 0.9, ease: "expo.inOut" }, id)
+          .from(word(id), { yPercent: 110, filter: "blur(12px)", duration: 0.8, stagger: 0.04 }, `${id}+=0.3`)
           .from(caption(id), { opacity: 0, y: 10, duration: 0.6 }, `${id}+=0.6`);
         build(id);
         t.to(scenes[i], { autoAlpha: 0, duration: 0.35, ease: "power2.in" }, `${id}+=${hold + 1}`);

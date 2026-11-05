@@ -3,10 +3,8 @@ import type { PhotoKey } from "./photos";
 export const SITE = {
   name: "Irvan Fahlepi",
   role: "Senior Full-Stack Developer · Interactive",
-  email: "mr.vero@usa.com",
+  email: "irvan.fahlepi@gmail.com",
   links: {
-    portfolio: "https://irvan-works.vercel.app/",
-    linkedin: "https://www.linkedin.com/in/mrvero/",
     github: "https://github.com/Mr-vero",
     source: "https://github.com/Mr-vero/irvan-fahlepi-showcase",
   },

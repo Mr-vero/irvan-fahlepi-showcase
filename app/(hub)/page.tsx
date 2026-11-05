@@ -1,8 +1,10 @@
 import Link from "next/link";
 import Photo from "@/components/Photo";
 import { CLIENTS, DEMOS, SITE } from "@/lib/site";
-import Monogram from "./_components/Monogram";
+import Hero from "./_components/Hero";
+import LiveWork from "./_components/LiveWork";
 import Reel from "./_components/Reel";
+import Spotlight from "./_components/Spotlight";
 
 const PROCESS = [
   { n: "01", title: "Prototype", text: "A clickable build within days, so the client reacts to the real thing, not a deck." },
@@ -31,7 +33,7 @@ export default function Home() {
         Let’s talk
       </a>
 
-      <Monogram />
+      <Hero />
 
       <div className="hub-marquee" aria-label="Brands and institutions I’ve built for">
         <div className="hub-marquee-track">
@@ -54,8 +56,10 @@ export default function Home() {
         </p>
       </section>
 
+      <Spotlight />
+
       <section id="work" aria-label="Demos">
-        {DEMOS.map((d) => (
+        {DEMOS.filter((d) => d.slug !== "loreal-shade-match").map((d) => (
           <article key={d.slug} className={`world world-${d.slug}`}>
             <div className="world-media" aria-hidden>
               <Photo name={d.photo} alt="" sizes="100vw" />
@@ -79,6 +83,8 @@ export default function Home() {
           </article>
         ))}
       </section>
+
+      <LiveWork />
 
       <Reel />
 
@@ -116,8 +122,6 @@ export default function Home() {
           something people <em>play.</em>
         </a>
         <div className="hub-foot-links">
-          <a href={SITE.links.portfolio}>Full portfolio</a>
-          <a href={SITE.links.linkedin}>LinkedIn</a>
           <a href={SITE.links.github}>GitHub</a>
           <a href={SITE.links.source}>Source code</a>
           <span>© {new Date().getFullYear()} {SITE.name}</span>
