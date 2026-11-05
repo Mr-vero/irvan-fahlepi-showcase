@@ -51,16 +51,16 @@ test("the live-work tour walks through all eight projects and links out to each"
     await expect(page.locator(`.tour-links a[href="${href}"]`)).toHaveAttribute("target", "_blank");
   }
 
-  // Scroll into the laptop half: the lid has opened and a desktop project is on screen with its caption.
+  // Scroll to the sixth card: it holds full screen with its caption.
   const tour = page.locator(".tour");
   await page.evaluate(() => {
     const el = document.querySelector<HTMLElement>(".tour")!;
     const travel = el.offsetHeight - 2 * innerHeight;
-    scrollTo(0, el.getBoundingClientRect().top + scrollY + travel * 0.775);
+    scrollTo(0, el.getBoundingClientRect().top + scrollY + travel * 0.71);
   });
-  await expect(tour).toHaveAttribute("data-phase", "laptop");
+  await expect(tour).toHaveAttribute("data-phase", "cards");
   await expect(tour).toHaveAttribute("data-step", "5");
-  await expect(page.locator(`.tour-cap[data-i="5"] .tour-name`)).toBeVisible();
+  await expect(page.locator(`[data-card="5"] .tour-name`)).toBeVisible();
 });
 
 test("a Forge-made game loads and runs inside the page", async ({ page }) => {
