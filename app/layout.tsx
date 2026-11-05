@@ -26,6 +26,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        {/* All photography comes from Unsplash's CDN; open the connection before the first image is parsed. */}
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <script dangerouslySetInnerHTML={{ __html: consentDefaults }} />
       </head>
       <body>

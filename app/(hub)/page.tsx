@@ -6,7 +6,6 @@ import { CLIENTS, DEMOS, SITE } from "@/lib/site";
 import Forge from "./_components/Forge";
 import Hero from "./_components/Hero";
 import LiveWork from "./_components/LiveWork";
-import Preloader from "./_components/Preloader";
 import Reel from "./_components/Reel";
 import Spotlight from "./_components/Spotlight";
 
@@ -21,7 +20,6 @@ const PROCESS = [
 export default function Home() {
   return (
     <main>
-      <Preloader />
       <header className="hub-top">
         <Link href="/" className="hub-mark" aria-label={`${SITE.name}, home`}>
           <span className="hub-mark-glyph" aria-hidden>

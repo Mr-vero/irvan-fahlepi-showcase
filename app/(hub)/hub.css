@@ -2,6 +2,8 @@
   --bone: #f2eee6;
   --ink: #0e0e0e;
   --signal: #ff3d1f;
+  /* vermilion for small text on light backgrounds: 5.7:1 on white, 4.9:1 on bone */
+  --signal-ink: #c42a10;
   --bg: var(--bone);
   --fg: var(--ink);
   --dim: rgba(14, 14, 14, 0.6);
@@ -128,7 +130,7 @@
   height: 40px;
   padding: 0 18px;
   background: var(--signal);
-  color: #fff;
+  color: var(--ink);
 }
 .hub-talk:hover {
   background: var(--ink);
@@ -252,26 +254,6 @@
   text-transform: uppercase;
   color: var(--dim);
   opacity: clamp(0, 1 - var(--p) * 14, 1);
-}
-.hero-wins .win {
-  animation: intro-win 1.2s var(--ease) both;
-}
-.hero-wins .win:nth-child(2) {
-  animation-delay: 0.08s;
-}
-.hero-wins .win:nth-child(3) {
-  animation-delay: 0.16s;
-}
-.hero-wins .win:nth-child(4) {
-  animation-delay: 0.24s;
-}
-@keyframes intro-win {
-  from {
-    clip-path: inset(100% 0 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
 }
 @keyframes intro-rise {
   from {
@@ -1278,6 +1260,9 @@ figure.pop-portrait {
 .hub-process-n {
   font-size: 13px;
   font-weight: 800;
+  color: var(--signal-ink);
+}
+.hub-process-grid li:hover .hub-process-n {
   color: var(--signal);
 }
 .hub-process-grid h3 {
@@ -1353,7 +1338,6 @@ figure.pop-portrait {
 .hub-legal {
   margin-top: 22px;
   font-size: 12px;
-  opacity: 0.7;
   max-width: 90ch;
 }
 
@@ -1920,70 +1904,6 @@ figure.pop-portrait {
   }
 }
 
-/* ---------- preloader ---------- */
-
-.loader {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: grid;
-  place-items: center;
-  background: var(--ink);
-  color: var(--bone);
-  transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
-}
-.loader.is-leaving {
-  transform: translateY(-100%);
-}
-.loader-mark {
-  display: flex;
-  gap: 0.08em;
-  font-size: clamp(120px, 22vw, 320px);
-  font-weight: 800;
-  letter-spacing: -0.06em;
-  line-height: 0.8;
-  overflow: hidden;
-}
-.loader-mark span {
-  display: block;
-  animation: loader-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.loader-mark span:last-child {
-  color: var(--signal);
-  animation-delay: 0.08s;
-}
-@keyframes loader-in {
-  from {
-    transform: translateY(105%);
-  }
-}
-.loader-name,
-.loader-tag,
-.loader-count {
-  position: absolute;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.loader-name {
-  left: var(--gutter);
-  bottom: 28px;
-}
-.loader-tag {
-  right: var(--gutter);
-  bottom: 28px;
-  opacity: 0.6;
-}
-.loader-count {
-  right: var(--gutter);
-  top: 24px;
-  font-size: clamp(40px, 6vw, 88px);
-  letter-spacing: -0.04em;
-  font-variant-numeric: tabular-nums;
-}
-
-
 /* ---------- chapters: each slides up over the last, which sinks back ---------- */
 
 .chapter {
@@ -2057,7 +1977,7 @@ figure.pop-portrait {
 /* the chapter marker */
 .story-chapter {
   position: fixed;
-  left: var(--gutter);
+  right: var(--gutter);
   bottom: 22px;
   z-index: 29;
   display: flex;
@@ -2167,7 +2087,6 @@ figure.pop-portrait {
     0 60px 120px -40px rgba(225, 79, 216, 0.45);
   --t: clamp(0, (var(--fp) - 0.05) / 0.25, 1);
   transform: translateY(calc(120px * (1 - var(--t)))) rotateX(calc(28deg * (1 - var(--t)))) scale(calc(0.86 + 0.14 * var(--t)));
-  opacity: calc(0.2 + 0.8 * var(--t));
   transform-origin: 50% 100%;
   will-change: transform;
 }
@@ -2470,4 +2389,74 @@ figure.pop-portrait {
 .world-chapter.chapter-over {
   border-radius: 0;
   overflow: visible;
+}
+.forge-points {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 26px;
+  max-width: 460px;
+}
+.forge-points li {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+.forge-points b {
+  display: block;
+  font-size: 15px;
+  color: #ff8fe2;
+}
+.forge-points span {
+  font-size: 13px;
+  opacity: 0.75;
+}
+@media (max-width: 900px) {
+  .forge-points {
+    display: none;
+  }
+}
+
+/* Opening: the monogram and name rise in with CSS on first paint. Nothing covers the hero, so the
+   photos count as painted the moment they arrive. */
+.hero-wins .win {
+  animation: intro-lift 1.1s var(--ease) both;
+}
+.hero-wins .win:nth-child(2) {
+  animation-delay: 0.07s;
+}
+.hero-wins .win:nth-child(3) {
+  animation-delay: 0.14s;
+}
+.hero-wins .win:nth-child(4) {
+  animation-delay: 0.21s;
+}
+@keyframes intro-lift {
+  from {
+    opacity: 0.35;
+    translate: 0 36px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-wins .win {
+    animation: none;
+  }
+}
+
+/* Off-screen chapters skip style, layout and paint until they come near the viewport. Only sections whose
+   height doesn't depend on their content get it, so scroll positions never shift when they render. */
+.spot,
+.forge,
+.world-chapter,
+.brief {
+  content-visibility: auto;
+}
+.reel-wrap,
+.arcade,
+.hub-process,
+.hub-foot {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1000px;
 }

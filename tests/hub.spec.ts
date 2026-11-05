@@ -38,8 +38,9 @@ test("the reel's segments jump between scenes", async ({ page }) => {
   await page.goto("/");
   await chooseConsent(page, "Decline");
   await page.locator(".reel").scrollIntoViewIfNeeded();
-  await page.getByRole("button", { name: "Jump to Ask" }).click();
-  await expect(page.locator('[data-scene="ask"]')).toBeVisible();
+  await page.getByRole("button", { name: "Jump to Build" }).click();
+  await expect(page.locator('.rf-cap[data-cap="build"]')).toBeVisible();
+  await expect(page.locator(".rf-claude")).toBeAttached();
 });
 
 test("the live-work gallery links out to every shipped project", async ({ page }) => {

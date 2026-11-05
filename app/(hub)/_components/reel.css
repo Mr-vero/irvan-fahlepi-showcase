@@ -1,0 +1,848 @@
+/* "Concept to live" — the process film. Everything inside .rf-stage is laid out in 1600 × 900 stage
+   pixels and scaled by --k to the frame, so the film composes identically at every size. */
+
+.reel.rf {
+  --k: 0.5;
+  aspect-ratio: 16 / 9;
+  background: #050505;
+  border-radius: clamp(10px, 1.4vw, 20px);
+  font-family: var(--sans);
+}
+@media (max-width: 720px) {
+  .reel.rf {
+    aspect-ratio: 16 / 9;
+  }
+}
+.rf-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1600px;
+  height: 900px;
+  transform: scale(var(--k));
+  transform-origin: 0 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0) 0 0 / 28px 28px,
+    #050505;
+}
+.rf-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5000px;
+  height: 1900px;
+  will-change: transform;
+}
+.rf-panel {
+  position: absolute;
+  width: 1600px;
+  height: 900px;
+  border-radius: 28px;
+  overflow: hidden;
+}
+.rf-win-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 18px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.rf-win-bar i {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+.rf-win-bar i:nth-child(2) {
+  background: #febc2e;
+}
+.rf-win-bar i:nth-child(3) {
+  background: #28c840;
+}
+.rf-win-bar span {
+  margin-left: 14px;
+}
+.rf-mono {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* ---------- 01 brief ---------- */
+
+.rf-p-brief {
+  background: radial-gradient(120% 90% at 30% 20%, #f4efe6, #ddd4c4);
+}
+.rf-brief {
+  position: absolute;
+  left: 230px;
+  top: 120px;
+  width: 1000px;
+  padding: 64px 72px;
+  background: #fffdf8;
+  border-radius: 6px;
+  box-shadow: 0 50px 90px -40px rgba(60, 40, 20, 0.45);
+  rotate: -1.2deg;
+  color: #231e19;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 25px;
+  line-height: 1.55;
+}
+.rf-brief-k {
+  font-size: 16px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #9a8f82;
+  margin-bottom: 26px;
+}
+.rf-brief-h {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: 56px;
+  line-height: 1.1;
+  margin-bottom: 22px;
+}
+.rf-brief-line + .rf-brief-line {
+  margin-top: 12px;
+}
+.rf-hl {
+  position: relative;
+  z-index: 0;
+  white-space: nowrap;
+}
+.rf-mark {
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: 2px;
+  height: 46%;
+  z-index: -1;
+  background: rgba(255, 61, 31, 0.38);
+  transform-origin: left;
+}
+.rf-note {
+  position: absolute;
+  right: 150px;
+  top: 150px;
+  width: 230px;
+  height: 230px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  background: var(--signal);
+  color: #fff;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  rotate: 7deg;
+  box-shadow: 0 30px 50px -24px rgba(120, 30, 10, 0.6);
+}
+
+/* ---------- 02–03 blueprint → design ---------- */
+
+.rf-p-design {
+  background: #f2ece2;
+}
+.rf-bp {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(rgba(190, 220, 255, 0.16) 1px, transparent 1px) 0 0 / 200px 200px,
+    linear-gradient(90deg, rgba(190, 220, 255, 0.16) 1px, transparent 1px) 0 0 / 200px 200px,
+    linear-gradient(rgba(190, 220, 255, 0.07) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, rgba(190, 220, 255, 0.07) 1px, transparent 1px) 0 0 / 40px 40px,
+    #0f2b5b;
+}
+.rf-bp-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  stroke: #d6e8ff;
+  stroke-width: 2.5;
+}
+.rf-wire {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.rf-dim {
+  stroke: #8fb6e8;
+  stroke-width: 1.5;
+}
+.rf-anno {
+  position: absolute;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 20px;
+  color: #d6e8ff;
+  letter-spacing: 0.04em;
+}
+.rf-anno::before {
+  content: "— ";
+  color: #ffb19f;
+}
+
+.rf-designed {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 30% 20%, #f8f3ea, #e9e0d1);
+}
+.rf-site {
+  position: absolute;
+  left: 180px;
+  top: 150px;
+  width: 860px;
+  height: 600px;
+  border-radius: 14px;
+  background: #f6f0e6;
+  box-shadow: 0 50px 90px -40px rgba(60, 40, 20, 0.45);
+  overflow: hidden;
+  color: #231e19;
+}
+.rf-site-bar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 46px;
+  background: #ece4d6;
+}
+.rf-site-k {
+  position: absolute;
+  left: 50px;
+  top: 70px;
+  font-size: 13px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #8a7f72;
+}
+.rf-site-h {
+  position: absolute;
+  left: 50px;
+  top: 96px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 54px;
+  line-height: 1.05;
+}
+.rf-site-h em {
+  color: #9a5b2e;
+}
+.rf-site-cta {
+  position: absolute;
+  left: 50px;
+  top: 490px;
+  height: 54px;
+  padding: 0 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 27px;
+  background: #231e19;
+  color: #f6f0e6;
+  font-size: 15px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.rf-site-label {
+  position: absolute;
+  top: 426px;
+  width: 180px;
+  font-family: Georgia, serif;
+  font-size: 17px;
+}
+.rf-phone {
+  position: absolute;
+  left: 1140px;
+  top: 170px;
+  width: 290px;
+  height: 580px;
+  border-radius: 44px;
+  border: 10px solid #141010;
+  background: #f6f0e6;
+  box-shadow: 0 50px 90px -40px rgba(60, 40, 20, 0.5);
+  color: #231e19;
+  text-align: center;
+}
+.rf-phone-k {
+  position: absolute;
+  inset: 300px 0 auto;
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #8a7f72;
+}
+.rf-phone-h {
+  position: absolute;
+  inset: 326px 0 auto;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 30px;
+  color: #3b1a24;
+}
+.rf-phone-cta {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 480px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 24px;
+  background: #231e19;
+  color: #f6f0e6;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.rf-asset {
+  position: absolute;
+  z-index: 2;
+  will-change: transform;
+}
+.rf-slot {
+  width: 180px;
+  height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 26px 40px -20px rgba(40, 20, 10, 0.55);
+}
+.rf-slot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rf-slot-phone {
+  height: 180px;
+  border-radius: 50%;
+}
+.rf-chip {
+  width: 110px;
+  height: 110px;
+  border-radius: 18px;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+  box-shadow: 0 20px 34px -18px rgba(0, 0, 0, 0.5);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 14px;
+  color: #231e19;
+}
+.rf-type {
+  padding: 18px 26px;
+  border-radius: 16px;
+  background: #fff;
+  color: #231e19;
+  font-size: 22px;
+  box-shadow: 0 20px 34px -18px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+.rf-type em {
+  font-family: Georgia, serif;
+  font-size: 56px;
+  margin-right: 10px;
+  vertical-align: -8px;
+}
+
+/* ---------- 04 build with AI ---------- */
+
+.rf-p-build {
+  background: radial-gradient(90% 80% at 70% 30%, #1b1426, #0a0a0e);
+}
+.rf-editor,
+.rf-claude {
+  position: absolute;
+  top: 110px;
+  height: 680px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 60px 100px -50px rgba(0, 0, 0, 0.9);
+}
+.rf-editor {
+  left: 80px;
+  width: 920px;
+  background: #121218;
+}
+.rf-code {
+  list-style: none;
+  counter-reset: ln;
+  padding: 24px 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 21px;
+  line-height: 38px;
+}
+.rf-code li {
+  counter-increment: ln;
+  display: flex;
+  white-space: pre;
+}
+.rf-code li::before {
+  content: counter(ln);
+  width: 70px;
+  padding-right: 24px;
+  text-align: right;
+  color: #4a4a58;
+}
+.rf-code-line {
+  color: #d6d6e2;
+}
+.rf-c-k {
+  color: #ff7ab6;
+}
+.rf-c-f {
+  color: #7ee0ff;
+}
+.rf-c-s {
+  color: #ffd27a;
+}
+.rf-claude {
+  left: 1030px;
+  width: 490px;
+  background: #17110d;
+}
+.rf-claude .rf-win-bar span::before {
+  content: "✳ ";
+  color: #d97757;
+}
+.rf-claude-body {
+  padding: 26px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 18px;
+  line-height: 1.45;
+}
+.rf-cl-you {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(217, 119, 87, 0.14);
+  color: #fff;
+}
+.rf-cl-dim {
+  color: #a39a90;
+}
+.rf-cl-ok {
+  color: #7fdc97;
+}
+
+/* ---------- 05 QA ---------- */
+
+.rf-p-qa {
+  background: radial-gradient(90% 80% at 30% 20%, #0f2018, #070a08);
+}
+.rf-runner {
+  position: absolute;
+  left: 140px;
+  top: 100px;
+  width: 1320px;
+  padding: 40px 48px;
+  border-radius: 20px;
+  background: #0d1411;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  color: #dfe9e3;
+}
+.rf-runner-cmd {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+.rf-runner-cmd span {
+  color: #2ecc8a;
+  margin-right: 12px;
+}
+.rf-grid {
+  display: grid;
+  grid-template-columns: 420px repeat(3, 1fr);
+  row-gap: 4px;
+  align-items: center;
+}
+.rf-grid > b {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8fb3a0;
+  padding-bottom: 14px;
+}
+.rf-row {
+  display: contents;
+}
+.rf-test {
+  font-size: 24px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.rf-cell {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2.5px dashed rgba(143, 179, 160, 0.5);
+  animation: rf-spin 1.4s linear infinite;
+}
+.rf-cell[data-pass="1"] {
+  border: 0;
+  background: #2ecc8a;
+  animation: rf-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rf-cell[data-pass="1"]::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #06140d;
+  font-size: 18px;
+  font-weight: 800;
+}
+@keyframes rf-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes rf-pop {
+  from {
+    transform: scale(0.4);
+  }
+}
+.rf-qa-sum {
+  margin-top: 30px;
+  font-size: 26px;
+  color: #a9c8b7;
+}
+.rf-passed {
+  font-size: 64px;
+  font-weight: 800;
+  color: #2ecc8a;
+  margin-right: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 06 ship ---------- */
+
+.rf-p-ship {
+  background: radial-gradient(90% 80% at 70% 30%, #1a1a1a, #080808);
+  color: #f2eee6;
+}
+.rf-push {
+  position: absolute;
+  left: 140px;
+  top: 100px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 30px;
+}
+.rf-push span {
+  color: var(--signal);
+  margin-right: 14px;
+}
+.rf-pipe {
+  position: absolute;
+  left: 140px;
+  top: 200px;
+  width: 1320px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.rf-pipe li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 22px;
+  color: rgba(242, 238, 230, 0.75);
+}
+.rf-node {
+  position: relative;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #2ecc8a;
+  color: #06140d;
+  font-size: 26px;
+  font-weight: 800;
+}
+.rf-link {
+  position: absolute;
+  top: 27px;
+  right: 100%;
+  width: calc(100% - 56px);
+  margin-right: -0px;
+  height: 3px;
+  background: #2ecc8a;
+  transform-origin: left;
+  translate: 56px 0;
+}
+.rf-browser {
+  position: absolute;
+  left: 340px;
+  top: 360px;
+  width: 920px;
+  height: 480px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #151515;
+  box-shadow: 0 60px 100px -50px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+.rf-live {
+  margin-left: auto;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(46, 204, 138, 0.16);
+  color: #2ecc8a;
+  font-size: 15px;
+}
+.rf-browser-shot {
+  width: 100%;
+  height: calc(100% - 46px);
+  object-fit: cover;
+  filter: brightness(0.75);
+}
+.rf-browser-h {
+  position: absolute;
+  left: 50px;
+  bottom: 50px;
+  font-family: Georgia, serif;
+  font-size: 58px;
+  color: #fff;
+}
+.rf-browser-h em {
+  color: #ffd9a8;
+}
+
+/* ---------- 07 measure ---------- */
+
+.rf-p-measure {
+  background: #f2eee6;
+  color: #0e0e0e;
+}
+.rf-demo {
+  position: absolute;
+  right: 120px;
+  top: 64px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(14, 14, 14, 0.3);
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rf-kpis {
+  position: absolute;
+  left: 120px;
+  top: 120px;
+  width: 1360px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.rf-kpi {
+  padding: 28px 30px;
+  border-radius: 20px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rf-kpi b {
+  font-size: 76px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.rf-kpi span {
+  font-size: 18px;
+  color: rgba(14, 14, 14, 0.6);
+}
+.rf-charts {
+  position: absolute;
+  left: 120px;
+  top: 380px;
+  width: 1360px;
+  height: 400px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.rf-funnel,
+.rf-chart {
+  border-radius: 20px;
+  background: #fff;
+}
+.rf-funnel {
+  padding: 44px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+}
+.rf-bar {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: center;
+  font-size: 20px;
+}
+.rf-bar i {
+  height: 30px;
+  border-radius: 0 8px 8px 0;
+  background: var(--signal);
+  transform-origin: left;
+}
+.rf-chart {
+  width: 100%;
+  height: 100%;
+  padding: 50px 40px;
+}
+.rf-axis {
+  stroke: rgba(14, 14, 14, 0.15);
+  stroke-width: 2;
+}
+.rf-line {
+  stroke: var(--signal);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+}
+
+/* ---------- overlays: title, captions, end card (not scaled, so type stays crisp) ---------- */
+
+.rf-title,
+.rf-end {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.2%;
+  text-align: center;
+  pointer-events: none;
+}
+.rf-title {
+  background: #050505;
+}
+.rf-title-pre,
+.rf-end-k {
+  font-size: clamp(9px, 0.9vw, 13px);
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+.rf-title-main,
+.rf-end-h {
+  font-size: clamp(30px, 6.4vw, 104px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  color: #fff;
+}
+.rf-title-main span,
+.rf-end-h span {
+  color: var(--signal);
+}
+.rf-end {
+  visibility: hidden;
+  background: radial-gradient(60% 60% at 50% 50%, rgba(5, 5, 5, 0.82), rgba(5, 5, 5, 0.35));
+}
+.rf-end-n {
+  font-size: clamp(11px, 1.1vw, 16px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.rf-cap {
+  position: absolute;
+  left: 3%;
+  bottom: 15%;
+  z-index: 6;
+  max-width: 46%;
+  padding: clamp(8px, 1vw, 14px) clamp(12px, 1.4vw, 20px);
+  border-radius: 14px;
+  background: rgba(5, 5, 5, 0.78);
+  color: #fff;
+  font-size: clamp(13px, 1.5vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  visibility: hidden;
+}
+.rf-cap b {
+  color: var(--signal);
+  margin-right: 6px;
+}
+.rf-cap span {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(10px, 0.95vw, 14px);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+@media (max-width: 720px) {
+  .rf-cap span {
+    display: none;
+  }
+}
+.reel.rf .reel-segs {
+  grid-template-columns: repeat(9, 1fr);
+}
+
+/* ---------- player bar: caption and controls sit under the picture, never on it ---------- */
+
+.reel.rf {
+  aspect-ratio: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.rf-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+.rf-chrome {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  align-items: center;
+  gap: clamp(12px, 2vw, 28px);
+  padding: clamp(12px, 1.4vw, 18px) clamp(14px, 2vw, 26px);
+  background: #0b0b0b;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.rf-caps {
+  position: relative;
+  min-height: 2.6em;
+  font-size: clamp(13px, 1.3vw, 19px);
+}
+.rf-chrome .rf-cap {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  bottom: auto;
+  max-width: none;
+  padding: 0;
+  background: none;
+  translate: 0 -50%;
+  font-size: inherit;
+}
+.rf-chrome .reel-hud-bottom {
+  position: static;
+  left: auto;
+  right: auto;
+}
+@media (max-width: 720px) {
+  .rf-chrome {
+    grid-template-columns: 1fr;
+  }
+}

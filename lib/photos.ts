@@ -41,12 +41,28 @@ export const PHOTOS = {
 
 export type PhotoKey = keyof typeof PHOTOS;
 
+/**
+ * The few photos that are on screen at first paint are served from this site (public/photos), so the
+ * largest paint doesn't wait on a connection to a second origin. Widths match LOCAL_WIDTHS.
+ */
+const LOCAL = new Set<PhotoKey>(["redDress", "orange", "workshop", "portrait"]);
+const LOCAL_WIDTHS = [480, 800, 1200, 1800];
+
+export function isLocal(key: PhotoKey, ratio?: number) {
+  return LOCAL.has(key) && !ratio;
+}
+
 export function photoUrl(key: PhotoKey, w: number, h?: number, q = 72): string {
+  if (!h && LOCAL.has(key)) {
+    const fit = LOCAL_WIDTHS.find((lw) => lw >= w) ?? LOCAL_WIDTHS[LOCAL_WIDTHS.length - 1];
+    return `/photos/${key}-${fit}.webp`;
+  }
   const size = h ? `&h=${h}&fit=crop` : "";
   return `https://images.unsplash.com/photo-${PHOTOS[key]}?w=${w}${size}&q=${q}&auto=format&crop=entropy`;
 }
 
 /** A width-based srcset; `ratio` (h/w) crops every candidate to the same shape. */
 export function photoSrcSet(key: PhotoKey, ratio?: number, widths = [480, 800, 1200, 1800, 2400]): string {
+  if (isLocal(key, ratio)) return LOCAL_WIDTHS.map((w) => `/photos/${key}-${w}.webp ${w}w`).join(", ");
   return widths.map((w) => `${photoUrl(key, w, ratio ? Math.round(w * ratio) : undefined)} ${w}w`).join(", ");
 }

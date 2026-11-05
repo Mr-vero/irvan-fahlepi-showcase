@@ -2,7 +2,7 @@
   --bg: var(--ink);
   --fg: var(--bone);
   --dim: rgba(242, 238, 230, 0.62);
-  --faint: rgba(242, 238, 230, 0.38);
+  --faint: rgba(242, 238, 230, 0.6);
   --line: rgba(242, 238, 230, 0.14);
   background: var(--bg);
   color: var(--fg);
@@ -346,4 +346,95 @@
 .lab-foot {
   border-top: 0;
   padding-top: 40px;
+}
+
+/* ---------- Lighthouse ---------- */
+
+.lh-table {
+  display: grid;
+  gap: 12px;
+}
+.lh-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(0, 2fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 24px;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: rgba(242, 238, 230, 0.05);
+}
+.lh-page b {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+}
+.lh-page span {
+  font-size: 13px;
+  color: var(--dim);
+}
+.lh-form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.lh-gauges {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.lh-gauge {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.lh-gauge svg {
+  width: 56px;
+  height: 56px;
+  rotate: -90deg;
+}
+.lh-track {
+  fill: none;
+  stroke: rgba(242, 238, 230, 0.1);
+  stroke-width: 5;
+}
+.lh-fill {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.lh-pass .lh-fill {
+  stroke: #0cce6b;
+}
+.lh-pass b {
+  color: #0cce6b;
+}
+.lh-average .lh-fill {
+  stroke: #ffa400;
+}
+.lh-average b {
+  color: #ffa400;
+}
+.lh-gauge b {
+  position: absolute;
+  top: 17px;
+  font-size: 16px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.lh-gauge span {
+  font-size: 12px;
+  color: var(--dim);
+  line-height: 1.2;
+}
+@media (max-width: 900px) {
+  .lh-row {
+    grid-template-columns: 1fr;
+  }
 }

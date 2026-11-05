@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE } from "@/lib/site";
+import Lighthouse from "./Lighthouse";
 import LiveStats from "./LiveStats";
 import "./lab.css";
 
@@ -58,6 +59,8 @@ export default function Lab() {
       </section>
 
       <LiveStats />
+
+      <Lighthouse />
 
       <section className="lab-section" aria-labelledby="qa">
         <div className="lab-head">

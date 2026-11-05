@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "@/lib/useScrollProgress";
 import Photo from "@/components/Photo";
 
@@ -45,6 +45,9 @@ const POPS: { cls: string; at: number }[] = [
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
   const pops = useRef<{ cls: string; at: number; node: HTMLElement }[]>([]);
+  // The collage photos sit hidden in the first screen, so lazy loading alone would fetch them at once.
+  // Mount them only once the visitor starts scrolling; they spring in well after that.
+  const [collage, setCollage] = useState(false);
 
   useEffect(() => {
     pops.current = POPS.map((p) => ({ ...p, node: root.current!.querySelector<HTMLElement>(`.${p.cls}`)! }));
@@ -59,6 +62,7 @@ export default function Hero() {
       const theme = p > 0.1 && p < 0.27 ? "dark" : "light";
       if (el.dataset.theme !== theme) el.dataset.theme = theme;
       for (const pop of pops.current) pop.node.classList.toggle("is-in", p >= pop.at);
+      if (p > 0.04) setCollage(true);
     },
     { tail: true },
   );
@@ -110,7 +114,7 @@ export default function Hero() {
 
           <div className="hero-collage">
             <figure className="pop pop-portrait">
-              <Photo name="redDress" alt="" ratio={1.3} sizes="(max-width: 820px) 46vw, 26vw" />
+              {collage && <Photo name="redDress" alt="" ratio={1.3} sizes="(max-width: 820px) 46vw, 26vw" />}
             </figure>
 
             <div className="pop pop-phone">
@@ -140,10 +144,10 @@ export default function Hero() {
             </div>
 
             <figure className="pop pop-swatch">
-              <Photo name="swatches" alt="" ratio={1.15} sizes="200px" />
+              {collage && <Photo name="swatches" alt="" ratio={1.15} sizes="200px" />}
             </figure>
             <figure className="pop pop-perfume">
-              <Photo name="goldenBottles" alt="" ratio={1} sizes="180px" />
+              {collage && <Photo name="goldenBottles" alt="" ratio={1} sizes="180px" />}
             </figure>
 
             <div className="pop pop-survey">
@@ -157,7 +161,7 @@ export default function Hero() {
             </div>
 
             <figure className="pop pop-leather">
-              <Photo name="stitching" alt="" ratio={1.2} sizes="170px" />
+              {collage && <Photo name="stitching" alt="" ratio={1.2} sizes="170px" />}
             </figure>
 
             <p className="pop pop-score">

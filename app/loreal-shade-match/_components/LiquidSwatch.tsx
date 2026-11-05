@@ -41,18 +41,43 @@ void main(){
   gl_FragColor = vec4(col * a, a);
 }`;
 
-type Props = { rgb: [number, number, number]; className?: string };
+type Props = {
+  rgb: [number, number, number];
+  className?: string;
+  /** Wait for the visitor's first interaction before starting WebGL, so a decorative swatch costs nothing at load. */
+  deferred?: boolean;
+};
 
 /** Renders nothing visible on its own if WebGL is unavailable; the parent's CSS colour shows through. */
-export default function LiquidSwatch({ rgb, className }: Props) {
+export default function LiquidSwatch({ rgb, className, deferred }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const color = useRef(rgb);
   color.current = rgb;
 
   useEffect(() => {
-    const el = canvas.current!;
+    let stop = () => {};
+    if (!deferred) {
+      stop = start();
+      return () => stop();
+    }
+    const events = ["pointerdown", "pointermove", "keydown", "touchstart", "wheel"] as const;
+    const go = () => {
+      events.forEach((e) => window.removeEventListener(e, go));
+      stop = start();
+    };
+    events.forEach((e) => window.addEventListener(e, go, { passive: true }));
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, go));
+      stop();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function start(): () => void {
+    const el = canvas.current;
+    if (!el) return () => {};
     const gl = el.getContext("webgl", { premultipliedAlpha: true, antialias: true, alpha: true });
-    if (!gl) return;
+    if (!gl) return () => {};
 
     const compile = (type: number, src: string) => {
       const s = gl.createShader(type)!;
@@ -64,7 +89,7 @@ export default function LiquidSwatch({ rgb, className }: Props) {
     gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
     gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
     gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return () => {};
     gl.useProgram(prog);
 
     const buf = gl.createBuffer();
@@ -105,7 +130,7 @@ export default function LiquidSwatch({ rgb, className }: Props) {
       ro.disconnect();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, []);
+  }
 
   return <canvas ref={canvas} className={className} aria-hidden />;
 }

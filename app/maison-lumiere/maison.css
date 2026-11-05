@@ -1,7 +1,7 @@
 .ml {
   --paper: #f2ece2;
   --ink: #231e19;
-  --soft: rgba(35, 30, 25, 0.6);
+  --soft: rgba(35, 30, 25, 0.7);
   --hair: rgba(35, 30, 25, 0.16);
   --pencil: #2e2720;
   --accent: #9a5b2e;
@@ -558,7 +558,7 @@
 
 .ml-foot {
   padding: 20px clamp(18px, 4vw, 56px) 24px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   color: var(--soft);
   border-top: 1px solid var(--hair);

@@ -291,7 +291,7 @@
 }
 .at-foot {
   padding: 22px var(--gutter);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--soft);
   text-align: center;
   border-top: 1px solid var(--hair);
@@ -407,9 +407,10 @@
     opacity: 0;
   }
 }
+/* Words start dim but still readable (above 3:1 for this size), and brighten as you scroll. */
 @keyframes at-word {
   from {
-    opacity: 0.12;
+    opacity: 0.45;
   }
   to {
     opacity: 1;

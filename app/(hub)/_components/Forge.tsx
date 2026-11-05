@@ -38,9 +38,27 @@ export default function Forge() {
               PingPlay <em>Forge</em>
             </h2>
             <p className="forge-lede">
-              The studio I built to turn a brief and a brand kit into a finished, tested game. A 3D game with your
-              assets in a few hours; 2D titles in a fraction of that.
+              My own build tool, and the reason I ship games fast. It turns a brief and a brand kit into a finished,
+              tested game: a 3D game with your assets in a few hours, a 2D mini game in a fraction of that.
             </p>
+            <ul className="forge-points">
+              <li>
+                <b>Built by me</b>
+                <span>My pipeline, end to end</span>
+              </li>
+              <li>
+                <b>Games &amp; mini games</b>
+                <span>Brief to QA-passed build</span>
+              </li>
+              <li>
+                <b>Playable ads</b>
+                <span>Exports for ad networks</span>
+              </li>
+              <li>
+                <b>Host anywhere</b>
+                <span>Static build, any CDN</span>
+              </li>
+            </ul>
           </div>
 
           <div className="forge-stage" aria-hidden>
@@ -52,7 +70,7 @@ export default function Forge() {
                 <span>PingPlay Forge</span>
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/work/forge.webp" alt="" />
+              <img src="/work/forge.webp" alt="" loading="lazy" decoding="async" />
             </div>
             <ol className="forge-pipe">
               {PIPELINE.map((s, i) => (
@@ -106,7 +124,7 @@ export default function Forge() {
               ) : (
                 <button className="arcade-start" onClick={() => setPlaying(true)}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`/work/game-${featured.id}.webp`} alt="" />
+                  <img src={`/work/game-${featured.id}.webp`} alt="" loading="lazy" decoding="async" />
                   <span className="arcade-play">
                     <b>▶</b> Tap to play {featured.title}
                   </span>

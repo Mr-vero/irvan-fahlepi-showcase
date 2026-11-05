@@ -189,7 +189,7 @@ export default function ShadeMatch() {
               <Photo name="swatches" alt="" ratio={1.2} sizes="220px" className="sm-sticker sm-sticker-a" />
               <Photo name="lipsticks" alt="" ratio={1} sizes="180px" className="sm-sticker sm-sticker-b" />
               <div className="sm-sticker sm-sticker-c" style={{ background: css(HERO_SHADE) }}>
-                <LiquidSwatch rgb={oklchToSrgb(HERO_SHADE)} className="sm-liquid" />
+                <LiquidSwatch rgb={oklchToSrgb(HERO_SHADE)} className="sm-liquid" deferred />
               </div>
             </div>
             <p className="sm-visual-caption">Nº 01 — Le regard</p>
