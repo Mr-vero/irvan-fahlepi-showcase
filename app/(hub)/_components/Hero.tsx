@@ -1,21 +1,35 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useScrollProgress } from "@/lib/useScrollProgress";
 import Photo from "@/components/Photo";
 
 /**
  * One pinned scene in four beats, all driven by a single scroll value, --p (0 → 1):
- *   1. an "IF" sheet zooms open onto three photographs,
+ *   1. an "IF" monogram zooms open onto three photographs,
  *   2. the photos dissolve into a sketchbook whose pencil lines draw with the scroll,
  *   3. a collage pops in over the sketch, piece by piece,
  *   4. the headline rises.
  *
  * Smoothness comes from doing as little as possible per frame: scroll is read once per animation frame
- * and written to one CSS variable; the sheet zoom and line drawing are calc()s on that variable; and
+ * and written to one CSS variable; the monogram zoom and line drawing are calc()s on that variable; and
  * collage pieces only toggle a class when their threshold is crossed, so each pop is a short,
  * time-based spring on transform and opacity that the compositor runs on its own.
+ *
+ * The monogram has no SVG mask. Each stroke of "IF" is a plain clipping box holding its own copy of
+ * the photographs; the boxes scale up as a group while each copy scales down by the same factor, so
+ * the photos hold still and only the windows grow. Nothing is re-rasterised while it zooms, which is
+ * what made the masked version flicker or blank out when scrolling back up in Chrome.
  */
 const MAX_SCALE = 9;
+
+/** The strokes of "IF" in a 1000 × 600 box: x, y, width, height. */
+const STROKES = [
+  [318, 110, 104, 380],
+  [458, 110, 104, 380],
+  [458, 110, 250, 96],
+  [458, 258, 200, 88],
+];
 
 const POPS: { cls: string; at: number }[] = [
   { cls: "pop-portrait", at: 0.44 },
@@ -30,45 +44,43 @@ const POPS: { cls: string; at: number }[] = [
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
+  const pops = useRef<{ cls: string; at: number; node: HTMLElement }[]>([]);
 
   useEffect(() => {
-    const el = root.current!;
-    const pops = POPS.map((p) => ({ ...p, node: el.querySelector<HTMLElement>(`.${p.cls}`)! }));
-
-    const render = (p: number) => {
-      el.style.setProperty("--p", p.toFixed(4));
-      el.dataset.sheet = p < 0.3 ? "on" : "off";
-      for (const pop of pops) pop.node.classList.toggle("is-in", p >= pop.at);
-    };
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      render(1);
-      return;
-    }
-
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const rect = el.getBoundingClientRect();
-      const travel = rect.height - window.innerHeight;
-      render(Math.min(1, Math.max(0, -rect.top / Math.max(1, travel))));
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    pops.current = POPS.map((p) => ({ ...p, node: root.current!.querySelector<HTMLElement>(`.${p.cls}`)! }));
   }, []);
 
+  useScrollProgress(
+    root,
+    (p) => {
+      const el = root.current!;
+      el.style.setProperty("--p", p.toFixed(4));
+      // The header reads this: dark type on the bone intro and sketchbook, light type over the photos.
+      const theme = p > 0.1 && p < 0.27 ? "dark" : "light";
+      if (el.dataset.theme !== theme) el.dataset.theme = theme;
+      for (const pop of pops.current) pop.node.classList.toggle("is-in", p >= pop.at);
+    },
+    { tail: true },
+  );
+
+  const triptych = (
+    <>
+      <Photo name="redDress" alt="" sizes="44vw" priority />
+      <Photo name="orange" alt="" sizes="22vw" priority />
+      <Photo name="workshop" alt="" sizes="34vw" priority />
+    </>
+  );
+
   return (
-    <section className="hero" ref={root} aria-label="Irvan Fahlepi" style={{ "--max": MAX_SCALE } as React.CSSProperties}>
-      <div className="hero-sticky">
+    <section
+      className="hero chapter"
+      ref={root}
+      aria-label="Irvan Fahlepi"
+      data-chapter="Intro"
+      data-theme="light"
+      style={{ "--max": MAX_SCALE } as React.CSSProperties}
+    >
+      <div className="hero-sticky chapter-sticky">
         {/* Beat 2–3: the sketchbook and its collage */}
         <div className="hero-book" aria-hidden>
           <svg className="hero-sketch" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" fill="none">
@@ -166,30 +178,39 @@ export default function Hero() {
           </h1>
         </div>
 
-        {/* Beat 1: three photographs seen through the monogram */}
+        {/* Beat 1: the photographs, full frame once the monogram has opened */}
         <div className="hero-photos" aria-hidden>
-          <Photo name="redDress" alt="" sizes="44vw" priority />
-          <Photo name="orange" alt="" sizes="22vw" priority />
-          <Photo name="workshop" alt="" sizes="34vw" priority />
+          {triptych}
         </div>
 
-        <svg className="hero-sheet" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-hidden>
-          <defs>
-            <mask id="hero-cut" maskUnits="userSpaceOnUse" x="-3000" y="-3000" width="7000" height="6600">
-              <rect x="-3000" y="-3000" width="7000" height="6600" fill="#fff" />
-              <rect x="318" y="110" width="104" height="380" rx="6" fill="#000" />
-              <rect x="458" y="110" width="104" height="380" rx="6" fill="#000" />
-              <rect x="458" y="110" width="250" height="96" rx="6" fill="#000" />
-              <rect x="458" y="258" width="200" height="88" rx="6" fill="#000" />
-            </mask>
-          </defs>
-          <rect x="-3000" y="-3000" width="7000" height="6600" mask="url(#hero-cut)" className="hero-sheet-fill" />
-        </svg>
+        {/* Beat 0–1: the intro screen and the monogram windows */}
+        <div className="hero-intro">
+          <div className="hero-wins" aria-hidden>
+            {STROKES.map(([x, y, w, h], i) => (
+              <div key={i} className="win" style={{ "--x": x, "--y": y, "--w": w, "--h": h } as React.CSSProperties}>
+                <div className="win-photos">{triptych}</div>
+              </div>
+            ))}
+          </div>
+          <div className="hero-intro-copy">
+            <p className="hero-intro-name">Irvan Fahlepi</p>
+            <p className="hero-intro-line">
+              Senior full-stack developer for <em>games</em>, <em>quizzes</em> and interactive stories, from first sketch
+              to live.
+            </p>
+          </div>
+          <p className="hero-intro-meta" aria-hidden>
+            Remote · GMT+7
+            <br />
+            Available now
+          </p>
+        </div>
 
         <p className="hero-hint" aria-hidden>
           <span>↘</span> Scroll to unlock
         </p>
         <span className="hero-progress" aria-hidden />
+        <span className="chapter-shade" aria-hidden />
       </div>
     </section>
   );

@@ -51,3 +51,12 @@ test("the live-work gallery links out to every shipped project", async ({ page }
     await expect(page.locator(`a.live-card[href="${href}"]`)).toHaveAttribute("target", "_blank");
   }
 });
+
+test("a Forge-made game loads and runs inside the page", async ({ page }) => {
+  await page.goto("/");
+  await chooseConsent(page, "Decline");
+  await page.getByRole("button", { name: /Tap to play Glow Haul Seoul/ }).click();
+  const frame = page.locator(".arcade-phone iframe");
+  await expect(frame).toHaveAttribute("src", /glow-haul-seoul/);
+  await expect(page.getByRole("link", { name: /Join the Forge waitlist/ })).toHaveAttribute("href", "https://getpingplay.com/creators#forge-waitlist");
+});

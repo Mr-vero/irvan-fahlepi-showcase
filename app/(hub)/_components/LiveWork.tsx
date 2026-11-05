@@ -19,8 +19,9 @@ export default function LiveWork() {
 
     const measure = () => {
       distance = Math.max(0, tr.scrollWidth - window.innerWidth);
-      // The section is as tall as the horizontal distance, so one pixel of scroll moves one pixel.
-      el.style.height = `${distance + window.innerHeight}px`;
+      // The section is as tall as the horizontal distance, so one pixel of scroll moves one pixel, plus
+      // one more screen at the end while the next chapter slides over it.
+      el.style.height = `${distance + window.innerHeight * 2}px`;
       update();
     };
     const update = () => {
@@ -29,6 +30,7 @@ export default function LiveWork() {
       const x = Math.min(distance, Math.max(0, -top));
       tr.style.transform = `translate3d(${-x}px, 0, 0)`;
       el.style.setProperty("--wp", distance ? (x / distance).toFixed(4) : "0");
+      el.style.setProperty("--out", Math.min(1, Math.max(0, (-top - distance) / window.innerHeight)).toFixed(3));
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -47,8 +49,8 @@ export default function LiveWork() {
   }, []);
 
   return (
-    <section className="live" ref={root} aria-labelledby="live-title">
-      <div className="live-sticky">
+    <section className="live chapter" ref={root} data-theme="dark" data-chapter="Live work" aria-labelledby="live-title">
+      <div className="live-sticky chapter-sticky">
         <div className="live-track" ref={track}>
           <header className="live-intro">
             <p className="hub-label">Shipped &amp; live</p>
@@ -114,6 +116,7 @@ export default function LiveWork() {
           </aside>
         </div>
         <span className="live-progress" aria-hidden />
+        <span className="chapter-shade" aria-hidden />
       </div>
     </section>
   );

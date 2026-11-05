@@ -1,8 +1,12 @@
 import Link from "next/link";
+import Chapter from "@/components/Chapter";
 import Photo from "@/components/Photo";
+import StoryChrome from "@/components/StoryChrome";
 import { CLIENTS, DEMOS, SITE } from "@/lib/site";
+import Forge from "./_components/Forge";
 import Hero from "./_components/Hero";
 import LiveWork from "./_components/LiveWork";
+import Preloader from "./_components/Preloader";
 import Reel from "./_components/Reel";
 import Spotlight from "./_components/Spotlight";
 
@@ -17,6 +21,7 @@ const PROCESS = [
 export default function Home() {
   return (
     <main>
+      <Preloader />
       <header className="hub-top">
         <Link href="/" className="hub-mark" aria-label={`${SITE.name}, home`}>
           <span className="hub-mark-glyph" aria-hidden>
@@ -33,8 +38,11 @@ export default function Home() {
         Let’s talk
       </a>
 
+      <StoryChrome />
+
       <Hero />
 
+      <section className="chapter chapter-over brief" data-theme="light" data-chapter="Brief">
       <div className="hub-marquee" aria-label="Brands and institutions I’ve built for">
         <div className="hub-marquee-track">
           {[0, 1].map((copy) => (
@@ -55,12 +63,14 @@ export default function Home() {
           measured.
         </p>
       </section>
+      </section>
 
+      <div id="work" />
       <Spotlight />
 
-      <section id="work" aria-label="Demos">
-        {DEMOS.filter((d) => d.slug !== "loreal-shade-match").map((d) => (
-          <article key={d.slug} className={`world world-${d.slug}`}>
+      {DEMOS.filter((d) => d.slug !== "loreal-shade-match").map((d) => (
+        <Chapter key={d.slug} label={d.sector.split(" · ")[1]} theme="dark" over className="world-chapter">
+          <article className={`world world-${d.slug}`}>
             <div className="world-media" aria-hidden>
               <Photo name={d.photo} alt="" sizes="100vw" />
             </div>
@@ -81,14 +91,18 @@ export default function Home() {
               </Link>
             </div>
           </article>
-        ))}
-      </section>
+        </Chapter>
+      ))}
+
+      <Forge />
 
       <LiveWork />
 
-      <Reel />
+      <div className="chapter chapter-over" data-theme="dark" data-chapter="Showreel">
+        <Reel />
+      </div>
 
-      <section className="hub-process" aria-labelledby="process">
+      <section className="hub-process chapter" data-theme="light" data-chapter="Process" aria-labelledby="process">
         <div className="hub-process-head">
           <h2 id="process" className="hub-h2">
             From prototype
@@ -114,7 +128,7 @@ export default function Home() {
         </p>
       </section>
 
-      <footer className="hub-foot">
+      <footer className="hub-foot chapter" data-theme="light" data-chapter="Contact">
         <p className="hub-label">Available for full-time remote work</p>
         <a href={`mailto:${SITE.email}`} className="hub-cta">
           Let’s make

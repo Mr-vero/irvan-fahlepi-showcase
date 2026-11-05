@@ -24,11 +24,11 @@ export default function Spotlight() {
     el.style.setProperty("--sp", p.toFixed(4));
     const step = STEPS.filter((s) => p >= s).length;
     if (el.dataset.step !== String(step)) el.dataset.step = String(step);
-  });
+  }, { tail: true });
 
   return (
-    <section className="spot" ref={root} data-step="0" aria-labelledby="spot-title">
-      <div className="spot-sticky">
+    <section className="spot chapter" ref={root} data-step="0" data-theme="dark" data-chapter="Play" aria-labelledby="spot-title">
+      <div className="spot-sticky chapter-sticky">
         <div className="spot-glow" aria-hidden />
 
         <div className="spot-lines" aria-hidden>
@@ -77,6 +77,7 @@ export default function Spotlight() {
             Play the game <span aria-hidden>↗</span>
           </Link>
         </div>
+        <span className="chapter-shade" aria-hidden />
       </div>
     </section>
   );
