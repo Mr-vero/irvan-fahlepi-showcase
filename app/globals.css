@@ -1,0 +1,103 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+img,
+svg {
+  display: block;
+}
+
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* ---------- consent (shared by every page) ---------- */
+
+.if-consent {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  background: rgba(16, 16, 16, 0.86);
+  color: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  font: 13px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  z-index: 100;
+  animation: if-consent-in 0.6s 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.if-consent p {
+  flex: 1 1 240px;
+}
+.if-consent-actions {
+  display: flex;
+  gap: 8px;
+}
+.if-consent button {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.if-consent .if-decline {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.if-consent .if-accept {
+  background: #fff;
+  color: #111;
+}
+@keyframes if-consent-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

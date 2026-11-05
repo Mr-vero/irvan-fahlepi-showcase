@@ -1,0 +1,391 @@
+.at {
+  --paper: #f1ebe1;
+  --ink: #1c1a17;
+  --soft: rgba(28, 26, 23, 0.58);
+  --hair: rgba(28, 26, 23, 0.16);
+  --cognac: #6e3b22;
+  --thread: #b9772f;
+  --serif: var(--at-serif), Georgia, serif;
+  --sans: var(--at-sans), system-ui, sans-serif;
+  --gutter: clamp(18px, 5vw, 64px);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.at-page {
+  overflow-x: clip;
+}
+
+.at-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--cognac);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 10;
+}
+
+.at-top {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 9;
+  display: flex;
+  justify-content: space-between;
+  padding: 18px var(--gutter);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: linear-gradient(var(--paper) 40%, transparent);
+}
+.at-top span {
+  color: var(--soft);
+}
+
+.at-kicker {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+/* ---------- hero ---------- */
+
+.at-hero {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 var(--gutter);
+}
+.at-hero-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(88px, 22vw, 300px);
+  line-height: 0.82;
+  letter-spacing: -0.03em;
+  margin: 24px 0;
+}
+.at-hero-title em {
+  color: var(--cognac);
+}
+.at-hero-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--soft);
+}
+.at-cue {
+  position: absolute;
+  bottom: 28px;
+  width: 1px;
+  height: 56px;
+  background: linear-gradient(var(--ink), transparent);
+  animation: at-cue 2.2s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes at-cue {
+  0% {
+    transform: scaleY(0);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+/* ---------- statement ---------- */
+
+.at-statement {
+  min-height: 120vh;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--gutter);
+}
+.at-statement p {
+  font-family: var(--serif);
+  font-size: clamp(36px, 6.4vw, 92px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+  margin: 0 auto;
+}
+
+/* ---------- gestures ---------- */
+
+.at-card {
+  min-height: 80vh;
+  display: grid;
+  align-items: center;
+  padding: 0 var(--gutter);
+  border-top: 1px solid var(--hair);
+  view-timeline: --gesture block;
+}
+.at-card-inner {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: clamp(24px, 6vw, 96px);
+}
+.at-card:nth-child(even) .at-card-copy {
+  order: 2;
+}
+.at-card-n {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--cognac);
+}
+.at-card h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(64px, 11vw, 160px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin: 10px 0 24px;
+}
+.at-card-copy > p:last-child {
+  font-size: 17px;
+  line-height: 1.6;
+  max-width: 38ch;
+  color: rgba(28, 26, 23, 0.8);
+}
+.at-art {
+  width: 100%;
+  max-width: 420px;
+  justify-self: center;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  background: radial-gradient(circle at 50% 50%, rgba(110, 59, 34, 0.1), transparent 68%);
+  border-radius: 50%;
+}
+@media (max-width: 760px) {
+  .at-card-inner {
+    grid-template-columns: 1fr;
+  }
+  .at-card:nth-child(even) .at-card-copy {
+    order: 0;
+  }
+  .at-art {
+    max-width: 240px;
+  }
+}
+
+/* ---------- figures ---------- */
+
+.at-figures {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--hair);
+  border-bottom: 1px solid var(--hair);
+  background: var(--ink);
+  color: var(--paper);
+}
+.at-figures div {
+  padding: clamp(48px, 9vw, 120px) var(--gutter);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.at-figures div + div {
+  border-left: 1px solid rgba(241, 235, 225, 0.14);
+}
+.at-figure-n {
+  font-family: var(--serif);
+  font-size: clamp(64px, 9vw, 140px);
+  line-height: 0.9;
+  font-variant-numeric: lining-nums;
+}
+.at-figure-label {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(241, 235, 225, 0.6);
+}
+@media (max-width: 760px) {
+  .at-figures {
+    grid-template-columns: 1fr;
+  }
+  .at-figures div + div {
+    border-left: 0;
+    border-top: 1px solid rgba(241, 235, 225, 0.14);
+  }
+}
+
+/* ---------- finale ---------- */
+
+.at-finale {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px var(--gutter);
+  view-timeline: --finale block;
+}
+.at-thread {
+  width: min(520px, 90%);
+  stroke: var(--thread);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.at-finale h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(56px, 10vw, 150px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 40px 0;
+}
+.at-finale h2 em {
+  color: var(--cognac);
+}
+.at-back {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 4px;
+}
+.at-foot {
+  padding: 22px var(--gutter);
+  border-top: 1px solid var(--hair);
+  font-size: 11px;
+  color: var(--soft);
+  text-align: center;
+}
+
+/* ---------- scroll-driven motion ----------
+   Everything above is the finished state. Browsers without scroll timelines simply show it. */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .at-progress {
+      animation: at-grow linear both;
+      animation-timeline: scroll(root);
+    }
+
+    .at-hero-title,
+    .at-hero-sub,
+    .at-hero .at-kicker {
+      animation: at-hero-out linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 90vh;
+    }
+    .at-hero-sub,
+    .at-hero .at-kicker {
+      animation-name: at-fade-out;
+    }
+
+    .at-statement span {
+      animation: at-word linear both;
+      animation-timeline: view();
+      animation-range: cover 18% cover 42%;
+    }
+
+    .at-card-copy > * {
+      animation: at-rise linear both;
+      animation-timeline: --gesture;
+      animation-range: entry 15% cover 40%;
+    }
+    .at-card-copy > h2 {
+      animation-range: entry 20% cover 44%;
+    }
+    .at-card-copy > p:last-child {
+      animation-range: entry 25% cover 48%;
+    }
+    .at-art > * {
+      stroke-dasharray: 1;
+      animation: at-draw linear both;
+      animation-timeline: --gesture;
+      animation-range: entry 25% cover 55%;
+    }
+    .at-art {
+      animation: at-turn linear both;
+      animation-timeline: --gesture;
+      animation-range: entry 0% exit 100%;
+    }
+
+    .at-figures div {
+      animation: at-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
+    }
+
+    .at-thread {
+      animation: at-draw linear both;
+      animation-timeline: --finale;
+      animation-range: entry 10% cover 50%;
+    }
+    .at-finale h2,
+    .at-back {
+      animation: at-rise linear both;
+      animation-timeline: --finale;
+      animation-range: entry 30% cover 50%;
+    }
+  }
+}
+
+@keyframes at-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes at-hero-out {
+  to {
+    transform: scale(1.35) translateY(-6vh);
+    opacity: 0;
+    letter-spacing: 0.02em;
+  }
+}
+@keyframes at-fade-out {
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+@keyframes at-word {
+  from {
+    opacity: 0.12;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes at-rise {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
+  }
+}
+@keyframes at-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes at-turn {
+  from {
+    transform: rotate(-12deg) scale(0.9);
+  }
+  to {
+    transform: rotate(10deg) scale(1.02);
+  }
+}
