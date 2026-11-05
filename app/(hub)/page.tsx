@@ -5,7 +5,7 @@ import StoryChrome from "@/components/StoryChrome";
 import { CLIENTS, DEMOS, SITE } from "@/lib/site";
 import Forge from "./_components/Forge";
 import Hero from "./_components/Hero";
-import LiveWork from "./_components/LiveWork";
+import Tour from "./_components/Tour";
 import Reel from "./_components/Reel";
 import Spotlight from "./_components/Spotlight";
 
@@ -94,9 +94,9 @@ export default function Home() {
 
       <Forge />
 
-      <LiveWork />
+      <Tour />
 
-      <div className="chapter chapter-over" data-theme="dark" data-chapter="Showreel">
+      <div className="chapter" data-theme="dark" data-chapter="Showreel">
         <Reel />
       </div>
 

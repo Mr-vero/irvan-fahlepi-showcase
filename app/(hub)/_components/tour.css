@@ -1,0 +1,438 @@
+/* ---------- the live-work tour: CSS 3D phone and laptop ---------- */
+
+.tour {
+  --F: 2.2;
+  --pw: 300px;
+  position: relative;
+  height: 1050svh;
+  background: radial-gradient(120% 90% at 50% 40%, #1a1714, #070707 70%);
+  color: var(--bone);
+}
+.tour-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+.tour-stage {
+  position: absolute;
+  inset: 0;
+}
+/* Each device fades on a flat wrapper that also supplies the perspective, so the device keeps real depth. */
+.tp-fade,
+.tl-fade {
+  position: absolute;
+  inset: 0;
+  perspective: 1800px;
+  will-change: opacity;
+}
+.tl-fade {
+  opacity: 0;
+}
+.tour[data-ph="off"] .tp-fade,
+.tour:not([data-lp="on"]) .tl-fade {
+  visibility: hidden;
+}
+
+/* Phone. 1em = 1px at its resting size; the box is --F times bigger and scaled down by --ph-s. */
+.tp-phone {
+  --u: calc(var(--pw) * var(--F) / 300);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--pw) * var(--F));
+  aspect-ratio: 9 / 19.5;
+  font-size: var(--u);
+  translate: -50% -50%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tp-front,
+.tp-back,
+.tp-slice {
+  position: absolute;
+  inset: 0;
+  border-radius: 46em;
+  border-radius: calc(46 * var(--u));
+}
+.tp-front {
+  padding: calc(11 * var(--u));
+  background: linear-gradient(145deg, #4a4a50, #121214 38%, #2b2b30);
+  box-shadow: inset 0 0 0 calc(2 * var(--u)) rgba(255, 255, 255, 0.08);
+  transform: translateZ(calc(5 * var(--u)));
+}
+.tp-back {
+  background: linear-gradient(160deg, #3d3a37, #1b1918 60%);
+  transform: translateZ(calc(-5 * var(--u))) rotateY(180deg);
+}
+.tp-slice {
+  background: #26262a;
+  transform: translateZ(calc((3 - var(--d) * 3) * var(--u)));
+}
+.tp-screen {
+  position: relative;
+  height: 100%;
+  border-radius: calc(36 * var(--u));
+  overflow: hidden;
+  background: #000;
+}
+.tp-screen img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.tp-island {
+  position: absolute;
+  top: calc(12 * var(--u));
+  left: 50%;
+  translate: -50% 0;
+  width: 32%;
+  height: calc(26 * var(--u));
+  border-radius: 999px;
+  background: #000;
+}
+
+/* Laptop. The base lies flat in front of the hinge; the lid swings up from closed to open. */
+.tl-laptop {
+  --lw: 720px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--lw);
+  height: calc(var(--lw) * 0.625);
+  translate: -50% -60%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tl-lid {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  transform: rotateX(-88deg);
+  transform-style: preserve-3d;
+}
+.tl-lid-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px 18px 6px 6px;
+  background: linear-gradient(160deg, #bfc2c7, #8d9095);
+  transform: translateZ(-2px) rotateY(180deg);
+}
+.tl-screen {
+  position: absolute;
+  inset: 0;
+  padding: 14px 14px 22px;
+  border-radius: 18px 18px 6px 6px;
+  background: #0d0d0f;
+  box-shadow: inset 0 0 0 1.5px #3a3a40;
+  overflow: hidden;
+}
+.tl-screen img {
+  position: absolute;
+  inset: 14px 14px 22px;
+  width: calc(100% - 28px);
+  height: calc(100% - 36px);
+  object-fit: cover;
+  object-position: top;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.tl-base {
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 100%;
+  height: calc(var(--lw) * 0.55);
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);
+  transform-style: preserve-3d;
+}
+.tl-deck,
+.tl-slice {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 6px 22px 22px;
+}
+.tl-deck {
+  background:
+    radial-gradient(60% 30% at 50% 82%, rgba(0, 0, 0, 0.12), transparent 70%),
+    repeating-linear-gradient(90deg, transparent 0 34px, rgba(0, 0, 0, 0.08) 34px 36px) 12% 12% / 76% 52% no-repeat,
+    linear-gradient(180deg, #c9ccd1, #a9acb1);
+}
+.tl-slice {
+  background: #8a8d92;
+  transform: translateZ(calc(var(--d) * -5px - 4px));
+}
+
+/* Which screenshot is on: one per step. */
+.tour[data-step="0"] [data-i="0"],
+.tour[data-step="1"] [data-i="1"],
+.tour[data-step="2"] [data-i="2"],
+.tour[data-step="3"] [data-i="3"],
+.tour[data-step="4"] [data-i="4"],
+.tour[data-step="5"] [data-i="5"],
+.tour[data-step="6"] [data-i="6"],
+.tour[data-step="7"] [data-i="7"] {
+  opacity: 1;
+}
+/* Before the laptop's turn, it shows its first site. */
+.tour:is([data-step="0"], [data-step="1"], [data-step="2"]) .tl-screen [data-i="3"] {
+  opacity: 1;
+}
+
+/* ---------- copy ---------- */
+
+.tour-intro {
+  position: absolute;
+  left: var(--gutter);
+  top: 50%;
+  translate: 0 -50%;
+  max-width: 36vw;
+  z-index: 2;
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s var(--ease);
+}
+.tour:not([data-phase="intro"]) .tour-intro {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.tour-kicker {
+  color: var(--signal);
+}
+.tour-title {
+  font-size: clamp(48px, 6.4vw, 112px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  margin: 16px 0 18px;
+}
+.tour-sub {
+  font-size: 18px;
+  opacity: 0.75;
+}
+
+.tour-caps {
+  list-style: none;
+}
+.tour-cap {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(24px);
+  transition:
+    opacity 0.45s ease,
+    transform 0.6s var(--ease),
+    visibility 0.45s;
+}
+.tour-cap.on-phone {
+  left: var(--gutter);
+  bottom: 9svh;
+  max-width: min(520px, 80vw);
+  padding: 22px 24px;
+  border-radius: 20px;
+  background: rgba(8, 8, 8, 0.72);
+}
+.tour-cap.on-laptop {
+  left: var(--gutter);
+  top: 50%;
+  translate: 0 -50%;
+  max-width: 30vw;
+}
+.tour[data-phase="phone"] .tour-cap.on-phone:is([data-i="0"], [data-i="1"], [data-i="2"]),
+.tour[data-phase="laptop"] .tour-cap.on-laptop {
+  visibility: visible;
+}
+.tour[data-step="0"][data-phase="phone"] .tour-cap[data-i="0"],
+.tour[data-step="1"][data-phase="phone"] .tour-cap[data-i="1"],
+.tour[data-step="2"][data-phase="phone"] .tour-cap[data-i="2"],
+.tour[data-step="3"][data-phase="laptop"] .tour-cap[data-i="3"],
+.tour[data-step="4"][data-phase="laptop"] .tour-cap[data-i="4"],
+.tour[data-step="5"][data-phase="laptop"] .tour-cap[data-i="5"],
+.tour[data-step="6"][data-phase="laptop"] .tour-cap[data-i="6"],
+.tour[data-step="7"][data-phase="laptop"] .tour-cap[data-i="7"] {
+  opacity: 1;
+  transform: none;
+}
+.tour-n {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--signal);
+}
+.tour-n i {
+  font-style: normal;
+  color: rgba(242, 238, 230, 0.6);
+}
+.tour-kind {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.tour-name {
+  font-size: clamp(34px, 4vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+.tour-line {
+  font-size: 16px;
+  line-height: 1.45;
+  opacity: 0.85;
+  max-width: 40ch;
+}
+.tour-stack {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.tour-visit {
+  align-self: flex-start;
+  margin-top: 10px;
+}
+
+.tour-dots {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 3;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.tour:not([data-phase="intro"]) .tour-dots {
+  opacity: 1;
+}
+.tour-dots li {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(242, 238, 230, 0.3);
+  transition:
+    background 0.3s,
+    transform 0.3s;
+}
+.tour[data-step="0"] .tour-dots [data-i="0"],
+.tour[data-step="1"] .tour-dots [data-i="1"],
+.tour[data-step="2"] .tour-dots [data-i="2"],
+.tour[data-step="3"] .tour-dots [data-i="3"],
+.tour[data-step="4"] .tour-dots [data-i="4"],
+.tour[data-step="5"] .tour-dots [data-i="5"],
+.tour[data-step="6"] .tour-dots [data-i="6"],
+.tour[data-step="7"] .tour-dots [data-i="7"] {
+  background: var(--signal);
+  transform: scale(1.5);
+}
+
+@media (max-width: 820px) {
+  .tour {
+    --pw: 230px;
+    height: 980svh;
+  }
+  .tl-laptop {
+    --lw: 720px;
+  }
+  .tour-intro {
+    top: 14svh;
+    translate: none;
+    max-width: none;
+    right: var(--gutter);
+  }
+  .tour-cap.on-phone,
+  .tour-cap.on-laptop {
+    left: var(--gutter);
+    right: var(--gutter);
+    top: auto;
+    bottom: 6svh;
+    translate: none;
+    max-width: none;
+  }
+  .tour-cap.on-laptop {
+    bottom: 5svh;
+  }
+  .tour-name {
+    font-size: 34px;
+  }
+  .tour-line {
+    font-size: 15px;
+  }
+  .tour-dots {
+    display: none;
+  }
+}
+
+/* ---------- plain index of the same work ---------- */
+
+.tour-index {
+  background: var(--ink);
+  color: var(--bone);
+  padding: clamp(80px, 10vw, 130px) var(--gutter);
+}
+.tour-links {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+  margin: 22px 0 56px;
+}
+.tour-links a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: rgba(242, 238, 230, 0.05);
+  transition: background 0.3s;
+}
+.tour-links a:hover {
+  background: rgba(242, 238, 230, 0.1);
+}
+.tour-links b {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.tour-links span {
+  grid-column: 1;
+  font-size: 13px;
+  opacity: 0.7;
+}
+.tour-links i {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  align-self: center;
+  font-style: normal;
+  color: var(--signal);
+}
+.tour-index .live-private {
+  width: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour {
+    display: none;
+  }
+}
+
+.tour[data-flat="1"] .tp-phone {
+  transform-style: flat;
+}
+.tour[data-flat="1"] :is(.tp-slice, .tp-back) {
+  display: none;
+}

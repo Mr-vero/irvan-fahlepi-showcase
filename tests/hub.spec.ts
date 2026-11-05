@@ -43,14 +43,24 @@ test("the reel's segments jump between scenes", async ({ page }) => {
   await expect(page.locator(".rf-claude")).toBeAttached();
 });
 
-test("the live-work gallery links out to every shipped project", async ({ page }) => {
+test("the live-work tour walks through all eight projects and links out to each", async ({ page }) => {
   await page.goto("/");
   await chooseConsent(page, "Decline");
-  const cards = page.locator("a.live-card");
-  await expect(cards).toHaveCount(9);
+  await expect(page.locator(".tour-links a")).toHaveCount(8);
   for (const href of ["https://getpingplay.com", "https://mr-vero.github.io/the-last-ember/", "https://jakjapanmatsuri.vercel.app"]) {
-    await expect(page.locator(`a.live-card[href="${href}"]`)).toHaveAttribute("target", "_blank");
+    await expect(page.locator(`.tour-links a[href="${href}"]`)).toHaveAttribute("target", "_blank");
   }
+
+  // Scroll into the laptop half: the lid has opened and a desktop project is on screen with its caption.
+  const tour = page.locator(".tour");
+  await page.evaluate(() => {
+    const el = document.querySelector<HTMLElement>(".tour")!;
+    const travel = el.offsetHeight - 2 * innerHeight;
+    scrollTo(0, el.getBoundingClientRect().top + scrollY + travel * 0.72);
+  });
+  await expect(tour).toHaveAttribute("data-phase", "laptop");
+  await expect(page.locator(".tl-lid")).toHaveAttribute("style", /rotateX\(0(\.00)?deg\)/);
+  await expect(page.locator(`.tour-cap[data-i="5"] .tour-name`)).toBeVisible();
 });
 
 test("a Forge-made game loads and runs inside the page", async ({ page }) => {

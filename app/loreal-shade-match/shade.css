@@ -60,13 +60,13 @@
 .sm-top > * {
   white-space: nowrap;
 }
+/* On phones the disclaimer keeps its place at the top, on its own line. */
 @media (max-width: 480px) {
   .sm-top {
+    flex-wrap: wrap;
+    gap: 6px 16px;
     font-size: 12px;
     letter-spacing: 0.08em;
-  }
-  .sm-top-tag {
-    display: none;
   }
 }
 
