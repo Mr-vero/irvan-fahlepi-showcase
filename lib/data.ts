@@ -1,4 +1,14 @@
+import type { PhotoKey } from "./photos";
+
 export type Family = "floral" | "woody" | "citrus" | "amber";
+
+/** One photograph per family per question, so every answer card is a different image. */
+export const FAMILY_PHOTOS: Record<Family, PhotoKey[]> = {
+  floral: ["peony", "pinkRose", "whiteRose", "bouquet", "redRose"],
+  woody: ["walletTools", "hideWarm", "edge", "quilted", "hide"],
+  citrus: ["orangeSlice", "lemon", "orange", "lime", "orangeSlice"],
+  amber: ["lipsLight", "amberSwirl", "goldenBottles", "droplets", "clearBottle"],
+};
 
 export const FAMILIES: Family[] = ["floral", "woody", "citrus", "amber"];
 

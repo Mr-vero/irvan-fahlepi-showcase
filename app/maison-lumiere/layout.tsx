@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "Five questions to your signature fragrance. A survey demo for a fictional fragrance house.",
 };
 
-export const viewport: Viewport = { themeColor: "#0e0c0a" };
+export const viewport: Viewport = { themeColor: "#f2ece2" };
 
 export default function MaisonLayout({ children }: { children: React.ReactNode }) {
   return <div className={`ml ${serif.variable} ${sans.variable}`}>{children}</div>;

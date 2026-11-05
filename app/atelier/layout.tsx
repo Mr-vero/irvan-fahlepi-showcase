@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "A scroll story in seven gestures for a fictional leather house. Scroll-driven CSS, no animation library.",
 };
 
-export const viewport: Viewport = { themeColor: "#f1ebe1" };
+export const viewport: Viewport = { themeColor: "#110f0d" };
 
 export default function AtelierLayout({ children }: { children: React.ReactNode }) {
   return <div className={`at ${serif.variable} ${sans.variable}`}>{children}</div>;

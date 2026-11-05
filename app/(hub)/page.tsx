@@ -1,84 +1,96 @@
 import Link from "next/link";
-import { DEMOS, SITE } from "@/lib/site";
+import Photo from "@/components/Photo";
+import { CLIENTS, DEMOS, SITE } from "@/lib/site";
+import Monogram from "./_components/Monogram";
 import Reel from "./_components/Reel";
 
 const PROCESS = [
-  { n: "01", title: "Prototype", text: "A clickable build within days, so the client reacts to the real thing, not to a deck." },
-  { n: "02", title: "Backend", text: "Leaderboards, entries and aggregates, with server-side validation that holds up under a campaign spike." },
+  { n: "01", title: "Prototype", text: "A clickable build within days, so the client reacts to the real thing, not a deck." },
+  { n: "02", title: "Backend", text: "Leaderboards, entries and live aggregates, validated on the server and ready for a campaign spike." },
   { n: "03", title: "QA", text: "Playwright on desktop Chrome, Android and iOS Safari on every push. A failing check blocks the release." },
-  { n: "04", title: "Deploy", text: "Preview URL per branch for client review, production on merge. Rollback is one click." },
-  { n: "05", title: "Analytics", text: "A consent-gated GA4 and first-party funnel, defined before launch so the wrap report writes itself." },
+  { n: "04", title: "Deploy", text: "A preview link per change for client review, production on merge, and one-click rollback." },
+  { n: "05", title: "Measure", text: "Consent-first GA4 plus a first-party funnel, agreed before launch so the wrap report writes itself." },
 ];
 
 export default function Home() {
   return (
     <main>
       <header className="hub-top">
-        <Link href="/" className="hub-mark">
+        <Link href="/" className="hub-mark" aria-label={`${SITE.name}, home`}>
+          <span className="hub-mark-glyph" aria-hidden>
+            IF
+          </span>
           {SITE.name}
         </Link>
-        <span className="hub-top-mid">Interactive developer — prototype to live</span>
-        <a href={`mailto:${SITE.email}`} className="hub-top-link">
-          Contact
-        </a>
+        <nav className="hub-nav">
+          <a href="#work">Work</a>
+          <Link href="/lab">Lab</Link>
+        </nav>
       </header>
+      <a href={`mailto:${SITE.email}`} className="hub-pill hub-talk">
+        Let’s talk
+      </a>
 
-      <Reel />
+      <Monogram />
+
+      <div className="hub-marquee" aria-label="Brands and institutions I’ve built for">
+        <div className="hub-marquee-track">
+          {[0, 1].map((copy) => (
+            <ul key={copy} aria-hidden={copy === 1}>
+              {CLIENTS.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </div>
 
       <section className="hub-intro">
-        <p className="hub-kicker">About this page</p>
+        <p className="hub-label">The brief</p>
         <p className="hub-statement">
-          Four pieces built for the kind of work luxury and beauty houses commission: a <em>game</em>, a{" "}
-          <em>survey</em>, a <em>scroll story</em>, and the <em>build</em> behind them. Each one is live, tested and
+          Four pieces built for the work luxury and beauty houses commission: a <mark>game</mark>, a <mark>survey</mark>,
+          a <mark>scroll story</mark>, and the <mark>build</mark> behind them. Each is live, tested on real devices, and
           measured.
         </p>
       </section>
 
-      <section className="hub-index" aria-labelledby="work">
-        <h2 id="work" className="hub-kicker">
-          Selected demos
-        </h2>
-        <ol>
-          {DEMOS.map((d) => (
-            <li key={d.slug}>
-              <Link
-                href={`/${d.slug}`}
-                className="hub-row"
-                style={{ "--a": d.palette[0], "--b": d.palette[1], "--c": d.palette[2] } as React.CSSProperties}
-              >
-                <span className="hub-row-n">{d.index}</span>
-                <span className="hub-row-main">
-                  <span className="hub-row-title">{d.title}</span>
-                  <span className="hub-row-client">{d.client}</span>
-                </span>
-                <span className="hub-row-kind">{d.kind}</span>
-                <span className="hub-row-summary">{d.summary}</span>
-                <span className="hub-row-stack">
-                  {d.stack.map((s) => (
-                    <span key={s}>{s}</span>
-                  ))}
-                </span>
-                <span className="hub-row-swatch" aria-hidden>
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <span className="hub-row-arrow" aria-hidden>
-                  ↗
-                </span>
+      <section id="work" aria-label="Demos">
+        {DEMOS.map((d) => (
+          <article key={d.slug} className={`world world-${d.slug}`}>
+            <div className="world-media" aria-hidden>
+              <Photo name={d.photo} alt="" sizes="100vw" />
+            </div>
+            <div className="world-stickers" aria-hidden>
+              <Photo name={d.stickers[0]} alt="" ratio={1.25} sizes="(max-width: 900px) 40vw, 280px" />
+              <Photo name={d.stickers[1]} alt="" ratio={1} sizes="(max-width: 900px) 34vw, 240px" />
+            </div>
+            <div className="world-copy">
+              <p className="world-index">
+                {d.index} <span>— {d.sector}</span>
+              </p>
+              <h2 className="world-title">{d.title}</h2>
+              <p className="world-client">{d.client}</p>
+              <p className="world-summary">{d.summary}</p>
+              <p className="world-tags">{d.stack.join(" · ")}</p>
+              <Link href={`/${d.slug}`} className="hub-pill hub-pill-light">
+                {d.cta} <span aria-hidden>↗</span>
               </Link>
-            </li>
-          ))}
-        </ol>
+            </div>
+          </article>
+        ))}
       </section>
+
+      <Reel />
 
       <section className="hub-process" aria-labelledby="process">
         <div className="hub-process-head">
-          <h2 id="process" className="hub-kicker">
-            From prototype to live
+          <h2 id="process" className="hub-h2">
+            From prototype
+            <br />
+            to <mark>live.</mark>
           </h2>
-          <Link href="/lab" className="hub-text-link">
-            See it in the Lab →
+          <Link href="/lab" className="hub-pill">
+            See it in the Lab ↗
           </Link>
         </div>
         <ol className="hub-process-grid">
@@ -91,17 +103,17 @@ export default function Home() {
           ))}
         </ol>
         <p className="hub-ai">
-          Built with Claude Code as a pair programmer: scaffolding, test writing and refactors go faster, and every line
-          still gets reviewed by me.
+          Built with Claude Code as a pair programmer. Scaffolding, tests and refactors move faster, and I review every
+          line.
         </p>
       </section>
 
       <footer className="hub-foot">
-        <p className="hub-kicker">Available for full-time remote work</p>
+        <p className="hub-label">Available for full-time remote work</p>
         <a href={`mailto:${SITE.email}`} className="hub-cta">
-          Let’s make something
+          Let’s make
           <br />
-          people <em>play</em>.
+          something people <em>play.</em>
         </a>
         <div className="hub-foot-links">
           <a href={SITE.links.portfolio}>Full portfolio</a>
@@ -111,8 +123,8 @@ export default function Home() {
           <span>© {new Date().getFullYear()} {SITE.name}</span>
         </div>
         <p className="hub-legal">
-          L’Oréal Paris is a trademark of L’Oréal. Shade Match is an unofficial concept, not affiliated with or endorsed
-          by L’Oréal. Maison Lumière and Atelier Nº 7 are fictional.
+          Photography via Unsplash. L’Oréal Paris is a trademark of L’Oréal. Shade Match is an unofficial concept, not
+          affiliated with or endorsed by L’Oréal. Maison Lumière and Atelier Nº 7 are fictional.
         </p>
       </footer>
     </main>

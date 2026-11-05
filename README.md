@@ -4,13 +4,15 @@ One site, four demos of the work luxury and beauty houses commission, each taken
 
 | Route | Demo | What it shows |
 |---|---|---|
-| `/` | Index | Code-driven motion reel (GSAP timeline), demo index |
-| `/loreal-shade-match` | **Shade Match**: unofficial L'Oréal Paris concept | 30-second colour game, OKLCH swatches, server-verified leaderboard |
-| `/maison-lumiere` | **Maison Lumière**: fictional fragrance house | 5-question survey, canvas share card, live answer distribution |
-| `/atelier` | **Atelier Nº 7**: fictional leather house | Scroll story using CSS scroll timelines, no animation library |
+| `/` | Index | "IF" monogram that scrolls open onto photography, full-bleed demo sections, code-built showreel (GSAP) |
+| `/loreal-shade-match` | **Shade Match**: unofficial L'Oréal Paris concept | Editorial beauty campaign, 30-second colour game, WebGL liquid-gloss swatch, server-verified leaderboard |
+| `/maison-lumiere` | **Maison Lumière**: fictional fragrance house | Moodboard survey: photo answers pin to a board, a pencil-sketch bottle fills with watercolour, live answers |
+| `/atelier` | **Atelier Nº 7**: fictional leather house | Cinematic photo story using CSS scroll timelines, no animation library |
 | `/lab` | **The Lab** | Live funnels, QA matrix, performance, delivery pipeline |
 
-Stack: Next.js 16 (App Router), React 19, TypeScript, GSAP (reel and survey only), Upstash Redis, Playwright, GitHub Actions, Vercel.
+Stack: Next.js 16 (App Router), React 19, TypeScript, GSAP (reel and survey only), raw WebGL (one shader), Upstash Redis, Playwright, GitHub Actions, Vercel.
+
+Photography is free-licence from [Unsplash](https://unsplash.com/license), served from Unsplash's CDN at the size it is shown. No branded products appear.
 
 ## Run it
 

@@ -2,15 +2,18 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Photo from "@/components/Photo";
 import { track } from "@/lib/analytics";
+import { oklchToSrgb } from "@/lib/color";
 import { css, pointsFor, rankFor, same, type Round } from "@/lib/shade";
 import type { ScoreEntry } from "@/lib/store";
+import LiquidSwatch from "./LiquidSwatch";
 
 type Phase = "intro" | "loading" | "countdown" | "play" | "over" | "board";
 type Feedback = { kind: "hit" | "miss"; key: number; index: number; points?: number };
 
 const FREEZE_MS = 650;
-const LOBBY_SWATCHES = ["oklch(55% 0.16 8)", "oklch(68% 0.1 45)", "oklch(46% 0.12 25)", "oklch(74% 0.08 60)", "oklch(60% 0.14 355)"];
+const HERO_SHADE = { l: 0.5, c: 0.17, h: 18 };
 
 const ERRORS: Record<string, string> = {
   invalid_name: "Use 2–16 letters, numbers or spaces.",
@@ -167,56 +170,68 @@ export default function ShadeMatch() {
 
   const r = rounds[round];
   const multiplier = (1 + Math.min(streak, 10) * 0.1).toFixed(1);
+  const playing = phase === "countdown" || phase === "play";
 
   return (
-    <main className="sm-page">
+    <main className={`sm-page sm-${playing ? "playing" : "editorial"}`}>
       <header className="sm-top">
         <Link href="/" prefetch={false} className="sm-top-link">
-          ← Index
+          ← Irvan Fahlepi
         </Link>
         <span className="sm-top-tag">Unofficial concept · L’Oréal Paris</span>
       </header>
 
       {(phase === "intro" || phase === "loading") && (
-        <section className="sm-intro sm-enter">
-          <div className="sm-lobby" aria-hidden>
-            {LOBBY_SWATCHES.map((c, i) => (
-              <span key={c} style={{ background: c, "--i": i } as React.CSSProperties} />
-            ))}
-          </div>
-          <p className="sm-eyebrow">A colour game in thirty seconds</p>
-          <h1 className="sm-title">
-            Shade <em>Match</em>
-          </h1>
-          <p className="sm-lede">Every round, the shades sit a little closer together. How trained is your eye?</p>
-          <ol className="sm-rules">
-            <li>
-              <b>Tap</b> the exact shade
-            </li>
-            <li>
-              <b>Streaks</b> multiply points
-            </li>
-            <li>
-              <b>Misses</b> freeze you briefly
-            </li>
-          </ol>
-          <button className="sm-btn" onClick={start} disabled={phase === "loading"}>
-            {phase === "loading" ? "Preparing…" : "Start"}
-          </button>
-          {startError && <p className="sm-error">Couldn’t start a game. Try again.</p>}
-          {board.length > 0 && (
-            <div className="sm-podium">
-              <p className="sm-eyebrow">Today’s best eyes</p>
-              <ol>
-                {board.slice(0, 3).map((s) => (
-                  <li key={s.id}>
-                    <span>{s.name}</span>
-                    <b>{s.score.toLocaleString("en")}</b>
-                  </li>
-                ))}
-              </ol>
+        <section className="sm-split">
+          <div className="sm-visual" aria-hidden>
+            <Photo name="portrait" alt="" sizes="(max-width: 900px) 100vw, 50vw" priority className="sm-visual-photo" />
+            <div className="sm-collage">
+              <Photo name="swatches" alt="" ratio={1.2} sizes="220px" className="sm-sticker sm-sticker-a" />
+              <Photo name="lipsticks" alt="" ratio={1} sizes="180px" className="sm-sticker sm-sticker-b" />
+              <div className="sm-sticker sm-sticker-c" style={{ background: css(HERO_SHADE) }}>
+                <LiquidSwatch rgb={oklchToSrgb(HERO_SHADE)} className="sm-liquid" />
+              </div>
             </div>
-          )}
+            <p className="sm-visual-caption">Nº 01 — Le regard</p>
+          </div>
+
+          <div className="sm-panel sm-enter">
+            <p className="sm-eyebrow">A colour game in thirty seconds</p>
+            <h1 className="sm-title">
+              Shade <em>Match</em>
+            </h1>
+            <p className="sm-lede">Every round, the shades sit a little closer together. How trained is your eye?</p>
+            <ol className="sm-rules">
+              <li>
+                <b>Tap</b> the exact shade
+              </li>
+              <li>
+                <b>Streaks</b> multiply points
+              </li>
+              <li>
+                <b>Misses</b> freeze you briefly
+              </li>
+            </ol>
+            <button className="sm-btn" onClick={start} disabled={phase === "loading"}>
+              {phase === "loading" ? "Preparing…" : "Start"}
+            </button>
+            {startError && <p className="sm-error">Couldn’t start a game. Try again.</p>}
+            {board.length > 0 && (
+              <div className="sm-podium">
+                <p className="sm-eyebrow">Today’s best eyes</p>
+                <ol>
+                  {board.slice(0, 3).map((s, i) => (
+                    <li key={s.id}>
+                      <span>
+                        <i>{i + 1}</i> {s.name}
+                      </span>
+                      <b>{s.score.toLocaleString("en")}</b>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </div>
         </section>
       )}
 
@@ -254,12 +269,13 @@ export default function ShadeMatch() {
 
           <div className="sm-target-wrap">
             <div
-              key={round}
-              className={`sm-target${feedback?.kind === "miss" ? " is-miss" : ""}`}
+              className={`sm-target${feedback?.kind === "miss" && frozen ? " is-miss" : ""}`}
               style={{ background: css(r.target) }}
               data-testid="target"
               data-shade={css(r.target)}
-            />
+            >
+              <LiquidSwatch rgb={oklchToSrgb(r.target)} className="sm-liquid" />
+            </div>
             <p className="sm-shade-name" key={`n-${round}`}>
               {r.name}
             </p>
@@ -287,84 +303,97 @@ export default function ShadeMatch() {
       )}
 
       {phase === "over" && (
-        <section className="sm-over sm-enter">
-          <p className="sm-eyebrow">Time’s up</p>
-          <p className="sm-rank">{rankFor(correct)}</p>
-          <p className="sm-final" data-testid="final-score">
-            {score.toLocaleString("en")}
-          </p>
-          <dl className="sm-stats">
-            <div>
-              <dt>Shades matched</dt>
-              <dd>{correct}</dd>
+        <section className="sm-split sm-split-over">
+          <div className="sm-visual sm-visual-dark" aria-hidden>
+            <Photo name="lips" alt="" sizes="(max-width: 900px) 100vw, 50vw" priority className="sm-visual-photo" />
+            <div className="sm-verdict">
+              <p className="sm-eyebrow">Time’s up</p>
+              <p className="sm-rank">{rankFor(correct)}</p>
             </div>
-            <div>
-              <dt>Best streak</dt>
-              <dd>{best}</dd>
-            </div>
-          </dl>
-          <form className="sm-form" onSubmit={submit}>
-            <label htmlFor="sm-name">Name for the leaderboard</label>
-            <div className="sm-form-row">
-              <input
-                id="sm-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                maxLength={16}
-                minLength={2}
-                required
-                autoComplete="nickname"
-                placeholder="Camille"
-              />
-              <button className="sm-btn" disabled={submitting}>
-                {submitting ? "Saving…" : "Submit"}
-              </button>
-            </div>
-            {error && (
-              <p className="sm-error" role="alert">
-                {error}
-              </p>
-            )}
-          </form>
-          <button className="sm-link" onClick={start}>
-            Play again
-          </button>
+          </div>
+          <div className="sm-panel sm-enter">
+            <p className="sm-eyebrow">Your score</p>
+            <p className="sm-final" data-testid="final-score">
+              {score.toLocaleString("en")}
+            </p>
+            <dl className="sm-stats">
+              <div>
+                <dt>Shades matched</dt>
+                <dd>{correct}</dd>
+              </div>
+              <div>
+                <dt>Best streak</dt>
+                <dd>{best}</dd>
+              </div>
+            </dl>
+            <form className="sm-form" onSubmit={submit}>
+              <label htmlFor="sm-name">Name for the leaderboard</label>
+              <div className="sm-form-row">
+                <input
+                  id="sm-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength={16}
+                  minLength={2}
+                  required
+                  autoComplete="nickname"
+                  placeholder="Camille"
+                />
+                <button className="sm-btn" disabled={submitting}>
+                  {submitting ? "Saving…" : "Submit"}
+                </button>
+              </div>
+              {error && (
+                <p className="sm-error" role="alert">
+                  {error}
+                </p>
+              )}
+            </form>
+            <button className="sm-link" onClick={start}>
+              Play again
+            </button>
+          </div>
         </section>
       )}
 
       {phase === "board" && (
-        <section className="sm-board sm-enter">
-          <p className="sm-eyebrow">Leaderboard</p>
-          <h2 className="sm-title sm-title-sm">
-            Best <em>eyes</em>
-          </h2>
-          <ol data-testid="leaderboard">
-            {board.map((s, i) => (
-              <li key={s.id} className={s.id === you ? "is-you" : undefined}>
-                <span className="sm-board-rank">{String(i + 1).padStart(2, "0")}</span>
-                <span className="sm-board-name">
-                  {s.name}
-                  {s.id === you && <em> — you</em>}
-                </span>
-                <span className="sm-board-meta">{s.correct} matched</span>
-                <b>{s.score.toLocaleString("en")}</b>
-              </li>
-            ))}
-          </ol>
-          <div className="sm-board-actions">
-            <button className="sm-btn" onClick={start}>
-              Play again
-            </button>
-            <Link href="/" prefetch={false} className="sm-link">
-              See the other demos
-            </Link>
+        <section className="sm-split">
+          <div className="sm-visual" aria-hidden>
+            <Photo name="lipsticks" alt="" sizes="(max-width: 900px) 100vw, 50vw" priority className="sm-visual-photo" />
+          </div>
+          <div className="sm-panel sm-enter">
+            <p className="sm-eyebrow">Leaderboard</p>
+            <h2 className="sm-title sm-title-sm">
+              Best <em>eyes</em>
+            </h2>
+            <ol className="sm-board" data-testid="leaderboard">
+              {board.map((s, i) => (
+                <li key={s.id} className={s.id === you ? "is-you" : undefined}>
+                  <span className="sm-board-rank">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="sm-board-name">
+                    {s.name}
+                    {s.id === you && <em> — you</em>}
+                  </span>
+                  <span className="sm-board-meta">{s.correct} matched</span>
+                  <b>{s.score.toLocaleString("en")}</b>
+                </li>
+              ))}
+            </ol>
+            <div className="sm-board-actions">
+              <button className="sm-btn" onClick={start}>
+                Play again
+              </button>
+              <Link href="/" prefetch={false} className="sm-link">
+                See the other demos
+              </Link>
+            </div>
           </div>
         </section>
       )}
 
       <footer className="sm-legal">
         An unofficial concept by Irvan Fahlepi for portfolio purposes. Not affiliated with, sponsored or endorsed by
-        L’Oréal. L’Oréal Paris is a trademark of L’Oréal.
+        L’Oréal. L’Oréal Paris is a trademark of L’Oréal. Photography via Unsplash.
       </footer>
     </main>
   );

@@ -32,17 +32,22 @@ export default function Lab() {
   return (
     <main className="lab">
       <header className="hub-top">
-        <Link href="/" className="hub-mark">
+        <Link href="/" className="hub-mark" aria-label={`${SITE.name}, home`}>
+          <span className="hub-mark-glyph" aria-hidden>
+            IF
+          </span>
           {SITE.name}
         </Link>
-        <span className="hub-top-mid">The Lab</span>
-        <Link href="/" className="hub-top-link">
-          ← Index
-        </Link>
+        <nav className="hub-nav">
+          <Link href="/">← Index</Link>
+        </nav>
       </header>
+      <a href={`mailto:${SITE.email}`} className="hub-pill hub-talk">
+        Let’s talk
+      </a>
 
       <section className="lab-hero">
-        <p className="hub-kicker">04 — Behind the build</p>
+        <p className="hub-label lab-kicker">04 — Behind the build</p>
         <h1>
           The <em>Lab</em>
         </h1>
@@ -101,12 +106,12 @@ export default function Lab() {
             <span>Animation library on the scroll story. It runs on CSS scroll timelines.</span>
           </li>
           <li>
-            <b>0</b>
-            <span>Images on any page. Every visual is type, CSS, SVG or canvas.</span>
+            <b>AVIF</b>
+            <span>Every photo is resized and re-encoded by the CDN to the exact size it is shown at, and lazy-loaded below the fold.</span>
           </li>
           <li>
-            <b>142 kB</b>
-            <span>Total compressed JavaScript for Shade Match, React included. The game clock skips React entirely.</span>
+            <b>145 kB</b>
+            <span>Total compressed JavaScript for Shade Match, React and the WebGL swatch included.</span>
           </li>
           <li>
             <b>0 cookies</b>
