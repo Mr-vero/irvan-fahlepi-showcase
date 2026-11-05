@@ -47,7 +47,7 @@ test("the live-work tour walks through all eight projects and links out to each"
   await page.goto("/");
   await chooseConsent(page, "Decline");
   await expect(page.locator(".tour-links a")).toHaveCount(8);
-  for (const href of ["https://getpingplay.com", "https://mr-vero.github.io/the-last-ember/", "https://jakjapanmatsuri.vercel.app"]) {
+  for (const href of ["https://getpingplay.com", "https://mr-vero.github.io/the-last-ember/", "https://jakjapanmatsuri.id"]) {
     await expect(page.locator(`.tour-links a[href="${href}"]`)).toHaveAttribute("target", "_blank");
   }
 
