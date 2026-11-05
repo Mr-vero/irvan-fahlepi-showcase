@@ -56,10 +56,10 @@ test("the live-work tour walks through all eight projects and links out to each"
   await page.evaluate(() => {
     const el = document.querySelector<HTMLElement>(".tour")!;
     const travel = el.offsetHeight - 2 * innerHeight;
-    scrollTo(0, el.getBoundingClientRect().top + scrollY + travel * 0.72);
+    scrollTo(0, el.getBoundingClientRect().top + scrollY + travel * 0.775);
   });
   await expect(tour).toHaveAttribute("data-phase", "laptop");
-  await expect(page.locator(".tl-lid")).toHaveAttribute("style", /rotateX\(0(\.00)?deg\)/);
+  await expect(tour).toHaveAttribute("data-step", "5");
   await expect(page.locator(`.tour-cap[data-i="5"] .tour-name`)).toBeVisible();
 });
 

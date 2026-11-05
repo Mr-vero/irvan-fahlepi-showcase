@@ -13,7 +13,7 @@ export const LIGHTHOUSE: { measuredAt: string; origin: string; pages: PageScores
       "path": "/",
       "name": "Index",
       "mobile": {
-        "performance": 99,
+        "performance": 100,
         "accessibility": 100,
         "bestPractices": 100,
         "seo": 100
@@ -29,7 +29,7 @@ export const LIGHTHOUSE: { measuredAt: string; origin: string; pages: PageScores
       "path": "/loreal-shade-match",
       "name": "Shade Match",
       "mobile": {
-        "performance": 99,
+        "performance": 100,
         "accessibility": 100,
         "bestPractices": 100,
         "seo": 100
